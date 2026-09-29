@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RouteX | Next-Gen Logistics & Fleet Management</title>
+  <meta name="description" content="AI-powered fleet & delivery management for the modern economy. Optimize routes, track deliveries in real time, and scale your logistics.">
+  <!-- Shared stylesheet -->
+  <link rel="stylesheet" href="routex-styles.css">
+  <!-- FontAwesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="dot-grid fade-in">
+
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <div class="logo">
+      <span class="logo-highlight">RouteX</span>
+      <span style="font-size: 1rem; vertical-align: super;">®</span>
+    </div>
+    <ul class="nav-links">
+      <li><a href="#features" class="nav-link">Features</a></li>
+      <li><a href="#how-it-works" class="nav-link">How It Works</a></li>
+      <li><a href="#stats" class="nav-link">Network</a></li>
+    </ul>
+    <div style="display: flex; gap: 15px;">
+      <a href="customer-login.html" class="nb-btn yellow" style="padding: 8px 16px; font-size: 0.85rem;">Customer Login</a>
+      <a href="provider-login.html" class="nb-btn orange" style="padding: 8px 16px; font-size: 0.85rem;">Provider Portal</a>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <header class="hero graph-paper">
+    <!-- Animated SVG map lines background -->
+    <svg class="hero-map-bg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 600" preserveAspectRatio="none">
+      <!-- Path 1 (Active routing line) -->
+      <path class="route-path" d="M100 480 C 300 200, 500 500, 800 150 S 1100 450, 1350 180" fill="none" stroke="#FF4D00" stroke-width="5" stroke-linecap="round"/>
+      <!-- Path 2 (Secondary route) -->
+      <path class="route-path" d="M150 120 Q 400 450, 750 300 T 1300 500" fill="none" stroke="#FFED47" stroke-width="4" stroke-dasharray="8 8" stroke-linecap="round"/>
+      
+      <!-- Nodes / Delivery Points -->
+      <circle class="route-dot" cx="100" cy="480" r="8" fill="#FF4D00" stroke="#000" stroke-width="3"/>
+      <circle cx="430" cy="360" r="6" fill="#00FF94" stroke="#000" stroke-width="2"/>
+      <circle cx="800" cy="150" r="8" fill="#FF4D00" stroke="#000" stroke-width="3"/>
+      <circle cx="1050" cy="380" r="6" fill="#00FF94" stroke="#000" stroke-width="2"/>
+      <circle class="route-dot" cx="1350" cy="180" r="8" fill="#FF4D00" stroke="#000" stroke-width="3"/>
+    </svg>
+
+    <div class="hero-content">
+      <!-- Floating Badge -->
+      <div class="floating-badge-container">
+        <span class="nb-badge yellow" style="font-size: 0.95rem; border-width: 3px; box-shadow: 3px 3px 0px #000; padding: 6px 12px;">
+          <i class="fa-solid fa-bolt" style="margin-right: 6px; color: var(--accent-orange);"></i> POWERED BY AI
+        </span>
+      </div>
+
+      <div class="hero-stencil">ROUTEX</div>
+      <h1 class="hero-title">LOGISTICS.<br>REIMAGINED.</h1>
+      <p class="hero-subtitle">
+        AI-powered fleet & delivery management for the modern economy. Get full transparency, routing speedups, and optimized driver operations.
+      </p>
+      
+      <div class="hero-ctas">
+        <a href="customer-login.html" class="nb-btn yellow" id="cta-customer">
+          <i class="fa-solid fa-user" style="margin-right: 8px;"></i> GET STARTED AS CUSTOMER
+        </a>
+        <a href="provider-login.html" class="nb-btn orange" id="cta-provider">
+          <i class="fa-solid fa-truck-front" style="margin-right: 8px;"></i> JOIN AS PROVIDER
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Stats Bar -->
+  <section class="ticker-bar" id="stats">
+    <div class="ticker-content">
+      <span>50,000+ DELIVERIES</span>
+      <span>|</span>
+      <span>2,000+ DRIVERS</span>
+      <span>|</span>
+      <span>99.4% ON-TIME</span>
+      <span>|</span>
+      <span>120+ CITIES</span>
+      <span class="mobile-hide">|</span>
+      <span class="mobile-hide">100% SMART DISPATCH</span>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="section-padding container" id="features">
+    <div class="section-title-wrapper">
+      <h2 class="section-title">PLATFORM CORE</h2>
+      <p class="section-subtitle">A brutalist suite of enterprise-grade delivery features designed to eliminate overhead.</p>
+    </div>
+
+    <!-- Brutalist Grid (9 Cards) -->
+    <div class="features-grid">
+      
+      <!-- Card 1 -->
+      <div class="nb-card interactive">
+        <span class="feature-icon"><i class="fa-solid fa-robot" style="color: var(--accent-orange);"></i></span>
+        <h3 class="feature-title">AI Command Center</h3>
+        <p class="feature-desc">Real-time AI dispatching & smart route optimization to keep overhead low and delivery speeds maxed.</p>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="nb-card interactive">
+        <span class="feature-icon"><i class="fa-solid fa-location-crosshairs" style="color: var(--primary-yellow); -webkit-text-stroke: 1.5px #000;"></i></span>
+        <h3 class="feature-title">Live Tracking Hub</h3>
+        <p class="feature-desc">GPS-grade live tracking for every delivery in motion. High-accuracy maps show operations as they happen.</p>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="nb-card interactive">
+        <span class="feature-icon"><i class="fa-solid fa-shield-halved" style="color: var(--pure-black);"></i></span>
+        <h3 class="feature-title">Platform Admin</h3>
+        <p class="feature-desc">Full control panel for managing the entire ecosystem, setting dispatch parameters, and security policies.</p>
+      </div>
+
+      <!-- Card 4 -->
+      <div class="nb-card interactive">
+        <span class="feature-icon"><i class="fa-solid fa-circle-user" style="color: var(--accent-orange);"></i></span>
+        <h3 class="feature-title">Customer Portal</h3>
+        <p class="feature-desc">Seamless booking, instant tracking, automated invoicing, and complete order history panels.</p>
+      </div>
+
+      <!-- Card 5 -->
+      <div class="nb-card interactive">
+        <span class="feature-icon"><i class="fa-solid fa-truck-ramp-box" style="color: var(--primary-yellow); -webkit-text-stroke: 1.5px #000;"></i></span>
+        <h3 class="feature-title">Provider Portal</h3>
+        <p class="feature-desc">Driver & fleet management tools built for operators to configure capacities and assign schedules.</p>
+      </div>
+
+      <!-- Card 6 -->
+      <div class="nb-card interactive">
+        <span class="feature-icon"><i class="fa-solid fa-truck-moving" style="color: var(--pure-black);"></i></span>
+        <h3 class="feature-title">Fleet Management</h3>
+        <p class="feature-desc">End-to-end vehicle and driver assignment system matching vehicle load limits to optimal tasks.</p>
+      </div>
+
+      <!-- Card 7 -->
+      <div class="nb-card interactive">
+        <span class="feature-icon"><i class="fa-solid fa-box" style="color: var(--accent-orange);"></i></span>
+        <h3 class="feature-title">Package Deliveries</h3>
+        <p class="feature-desc">Smart package routing with priority queues, scanning, proof of delivery, and custom delivery notes.</p>
+      </div>
+
+      <!-- Card 8 -->
+      <div class="nb-card interactive">
+        <span class="feature-icon"><i class="fa-solid fa-address-book" style="color: var(--primary-yellow); -webkit-text-stroke: 1.5px #000;"></i></span>
+        <h3 class="feature-title">Customer Database</h3>
+        <p class="feature-desc">Centralized CRM with multi-role history, past shipping points, and automatic billing setups.</p>
+      </div>
+
+      <!-- Card 9 -->
+      <div class="nb-card interactive">
+        <span class="feature-icon"><i class="fa-solid fa-chart-line" style="color: var(--pure-black);"></i></span>
+        <h3 class="feature-title">Audits & Reports</h3>
+        <p class="feature-desc">Compliance-ready reporting and granular financial audits detailing cost savings, fuel use, and margins.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- How It Works Section -->
+  <section class="section-padding container" id="how-it-works">
+    <div class="section-title-wrapper">
+      <h2 class="section-title" style="background: var(--accent-orange); color: var(--pure-white);">HOW IT WORKS</h2>
+      <p class="section-subtitle">Our dispatch algorithm takes control from order creation to physical drop-off.</p>
+    </div>
+
+    <div class="steps-container">
+      <!-- Step 1 -->
+      <div class="nb-card step-card">
+        <div class="step-number">01</div>
+        <h3 class="mono-font" style="font-size: 1.4rem; margin-bottom: 12px;">BOOK</h3>
+        <p style="font-size: 0.95rem;">Customer places order via portal, inputting origin, destination, load volume, and priority status.</p>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="nb-card step-card">
+        <div class="step-number" style="background: var(--primary-yellow); color: var(--pure-black);">02</div>
+        <h3 class="mono-font" style="font-size: 1.4rem; margin-bottom: 12px;">DISPATCH</h3>
+        <p style="font-size: 0.95rem;">AI scans the network to assign the nearest available driver & vehicle, computing optimal routes instantly.</p>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="nb-card step-card">
+        <div class="step-number">03</div>
+        <h3 class="mono-font" style="font-size: 1.4rem; margin-bottom: 12px;">DELIVER</h3>
+        <p style="font-size: 0.95rem;">Real-time tracking broadcasts the driver's coordinates to all stakeholders until physical doorstep confirmation.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-top container">
+      <div>
+        <div class="logo">
+          <span class="logo-highlight" style="background: var(--primary-yellow);">RouteX</span>
+        </div>
+        <p class="footer-brand-desc">
+          Next-generation delivery and fleet logistics company. Custom built for businesses operating at rapid scale.
+        </p>
+        <div class="social-icons">
+          <a href="#" class="social-btn" aria-label="Twitter"><i class="fa-brands fa-twitter"></i></a>
+          <a href="#" class="social-btn" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+          <a href="#" class="social-btn" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
+        </div>
+      </div>
+      <div>
+        <h4 class="footer-header">PRODUCT</h4>
+        <ul class="footer-links">
+          <li><a href="#features">Features</a></li>
+          <li><a href="#how-it-works">How It Works</a></li>
+          <li><a href="dashboard.html">Dashboard Demo</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="footer-header">PORTALS</h4>
+        <ul class="footer-links">
+          <li><a href="customer-login.html">Customer Login</a></li>
+          <li><a href="provider-login.html">Provider Operations</a></li>
+          <li><a href="#">Register Fleet</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 ROUTEX LOGISTICS PVT LTD — ALL RIGHTS RESERVED</p>
+    </div>
+  </footer>
+
+  <!-- Theme Toggle Script -->
+  <script src="theme-toggle.js"></script>
+</body>
+</html>

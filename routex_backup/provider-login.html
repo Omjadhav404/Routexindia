@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RouteX | Provider Portal Login</title>
+  <meta name="description" content="Access the RouteX Provider and Fleet Operator Portal to manage vehicles, drivers, optimization tasks, and audits.">
+  <link rel="stylesheet" href="routex-styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="fade-in">
+
+  <div class="split-page">
+    
+    <!-- Left branding & illustration panel (Orange Accent, Dark Theme) -->
+    <div class="split-left-panel warning-stripes-orange" style="border-right-color: var(--pure-black);">
+      <div class="split-left-content" style="z-index: 10;">
+        <!-- Logo -->
+        <a href="index.html" class="logo login-brand">
+          <span class="logo-highlight" style="background: var(--accent-orange); color: var(--pure-white);">RouteX</span>
+        </a>
+
+        <!-- Middle copy -->
+        <div class="login-hero-text">
+          <h2 class="login-hero-headline" style="color: var(--pure-white);">FLEET. DISPATCH. SCALE.</h2>
+          <p class="login-hero-subtext" style="color: var(--pure-white);">Manage drivers, track active fuel metrics, view safety scores, and receive real-time dispatcher assignments.</p>
+          
+          <!-- Stylized fleet dispatching SVG -->
+          <svg class="login-illustration-svg" viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg" style="border-color: var(--pure-black); box-shadow: 5px 5px 0px var(--pure-black);">
+            <!-- Grid pattern representing fleet zones -->
+            <rect x="0" y="0" width="400" height="300" fill="#111" />
+            <line x1="0" y1="75" x2="400" y2="75" stroke="#333" stroke-width="1" />
+            <line x1="0" y1="150" x2="400" y2="150" stroke="#333" stroke-width="1" />
+            <line x1="0" y1="225" x2="400" y2="225" stroke="#333" stroke-width="1" />
+            <line x1="100" y1="0" x2="100" y2="300" stroke="#333" stroke-width="1" />
+            <line x1="200" y1="0" x2="200" y2="300" stroke="#333" stroke-width="1" />
+            <line x1="300" y1="0" x2="300" y2="300" stroke="#333" stroke-width="1" />
+
+            <!-- Dispatch lines (dynamic curves) -->
+            <path d="M 50 250 Q 200 150, 350 250" fill="none" stroke="#FF4D00" stroke-width="3" stroke-dasharray="5 5" />
+            <path d="M 50 50 Q 200 150, 350 50" fill="none" stroke="#00FF94" stroke-width="4" />
+            
+            <!-- Fleet Nodes -->
+            <rect x="40" y="40" width="20" height="20" fill="#FF4D00" stroke="#000" stroke-width="2" />
+            <circle cx="350" cy="50" r="10" fill="#00FF94" stroke="#000" stroke-width="2" />
+            <polygon points="50,230 65,260 35,260" fill="#FFED47" stroke="#000" stroke-width="2" />
+            <circle cx="350" cy="250" r="10" fill="#00FF94" stroke="#000" stroke-width="2" />
+            <circle cx="200" cy="150" r="12" fill="#FFF" stroke="#000" stroke-width="3" />
+
+            <!-- Labels -->
+            <text x="70" y="55" font-family="monospace" font-size="9" font-weight="900" fill="#FFF">HUB NORTH</text>
+            <text x="250" y="45" font-family="monospace" font-size="9" font-weight="900" fill="#FFF">TRUCK-A (ACTIVE)</text>
+            <text x="75" y="255" font-family="monospace" font-size="9" font-weight="900" fill="#FFF">HUB SOUTH</text>
+            <text x="220" y="155" font-family="monospace" font-size="9" font-weight="900" fill="#000">AI CENTER</text>
+          </svg>
+        </div>
+
+        <!-- Footer notice -->
+        <p class="mono-font" style="font-size: 0.85rem; color: #FFF; text-shadow: 2px 2px 0px #000;">
+          PROVIDER-GATEWAY: PORT-9092
+        </p>
+      </div>
+    </div>
+
+    <!-- Right Login Form panel -->
+    <div class="split-right-panel dot-grid">
+      <div class="login-box">
+        <div class="login-box-header">
+          <span class="login-label provider">PROVIDER / FLEET OPERATOR LOGIN</span>
+          <p style="margin-top: 8px; font-size: 0.95rem; font-weight: 500;">Access your dispatch logs, assignments, driver lists, and metrics here.</p>
+        </div>
+
+        <form action="dashboard.html" method="GET" id="provider-login-form">
+          <input type="hidden" name="role" value="provider">
+          <!-- Provider ID or Email -->
+          <div class="form-group">
+            <label for="provider-id" class="form-label">Provider ID or Email</label>
+            <input type="text" id="provider-id" name="providerId" class="form-control" placeholder="PROVIDER-10294 OR YOUR@EMAIL.COM" required>
+          </div>
+
+          <!-- Password Field -->
+          <div class="form-group">
+            <label for="password" class="form-label">Password</label>
+            <input type="password" id="password" name="password" class="form-control" placeholder="••••••••" required>
+          </div>
+
+          <!-- Remember me & credentials link -->
+          <div class="form-footer-links">
+            <label class="form-checkbox">
+              <input type="checkbox" name="remember">
+              Remember Me
+            </label>
+            <a href="#">Forgot Credentials?</a>
+          </div>
+
+          <!-- Submit Button -->
+          <button type="submit" class="nb-btn orange" style="width: 100%; font-size: 1rem; padding: 14px;">
+            ACCESS PROVIDER PORTAL <i class="fa-solid fa-truck-moving" style="margin-left: 8px;"></i>
+          </button>
+        </form>
+
+        <!-- Register Fleet Link -->
+        <div class="login-footer-switch">
+          New provider? <a href="#" style="background: var(--light-gray);">Register your fleet →</a>
+        </div>
+
+        <!-- Bottom alternate portal link -->
+        <div class="bottom-link-bar">
+          <a href="customer-login.html">Customer? → Customer Login</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Theme Toggle Script -->
+  <script src="theme-toggle.js"></script>
+</body>
+</html>

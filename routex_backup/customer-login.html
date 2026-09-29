@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RouteX | Customer Login</title>
+  <meta name="description" content="Access the RouteX customer portal to book deliveries, track shipments, and review order history.">
+  <link rel="stylesheet" href="routex-styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="fade-in">
+
+  <div class="split-page">
+    
+    <!-- Left branding & illustration panel -->
+    <div class="split-left-panel warning-stripes-yellow">
+      <div class="split-left-content">
+        <!-- Logo -->
+        <a href="index.html" class="logo login-brand">
+          <span class="logo-highlight" style="background: var(--primary-yellow); color: var(--pure-black);">RouteX</span>
+        </a>
+
+        <!-- Middle copy -->
+        <div class="login-hero-text">
+          <h2 class="login-hero-headline">FAST. SECURE. DISPATCHED.</h2>
+          <p class="login-hero-subtext">Optimizing delivery chains for manufacturers, ecommerce shops, and private shippers across the region.</p>
+          
+          <!-- Stylized city delivery SVG -->
+          <svg class="login-illustration-svg" viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+            <!-- Grid Lines representing city blocks -->
+            <line x1="0" y1="50" x2="400" y2="50" stroke="#000" stroke-width="2" />
+            <line x1="0" y1="150" x2="400" y2="150" stroke="#000" stroke-width="2" />
+            <line x1="0" y1="250" x2="400" y2="250" stroke="#000" stroke-width="2" />
+            <line x1="100" y1="0" x2="100" y2="300" stroke="#000" stroke-width="2" />
+            <line x1="200" y1="0" x2="200" y2="300" stroke="#000" stroke-width="2" />
+            <line x1="300" y1="0" x2="300" y2="300" stroke="#000" stroke-width="2" />
+
+            <!-- Route lines -->
+            <path d="M 100 150 L 200 150 L 200 50 L 300 50" fill="none" stroke="#FF4D00" stroke-width="6" stroke-linecap="round" />
+            
+            <!-- Nodes -->
+            <rect x="85" y="135" width="30" height="30" fill="#FFED47" stroke="#000" stroke-width="3" />
+            <circle cx="200" cy="150" r="10" fill="#00FF94" stroke="#000" stroke-width="3" />
+            <polygon points="300,35 315,65 285,65" fill="#FF4D00" stroke="#000" stroke-width="3" />
+            
+            <!-- Labels inside SVG -->
+            <text x="115" y="125" font-family="monospace" font-size="10" font-weight="900" fill="#000">ORIGIN A</text>
+            <text x="215" y="180" font-family="monospace" font-size="10" font-weight="900" fill="#000">AI OPTIMIZE</text>
+            <text x="315" y="80" font-family="monospace" font-size="10" font-weight="900" fill="#000">DROP B</text>
+
+            <!-- Small truck icon decoration -->
+            <circle cx="200" cy="100" r="14" fill="#000" />
+            <text x="194" y="105" fill="#FFF" font-family="monospace" font-weight="900" font-size="14">TRK</text>
+          </svg>
+        </div>
+
+        <!-- Footer notice -->
+        <p class="mono-font" style="font-size: 0.85rem; color: #FFF; text-shadow: 2px 2px 0px #000;">
+          SUPPORT ID: SECURE-LOGS-2025
+        </p>
+      </div>
+    </div>
+
+    <!-- Right Login Form panel -->
+    <div class="split-right-panel dot-grid">
+      <div class="login-box">
+        <div class="login-box-header">
+          <span class="login-label">CUSTOMER PORTAL LOGIN</span>
+          <p style="margin-top: 8px; font-size: 0.95rem; font-weight: 500;">Enter your login credentials to gain full account access.</p>
+        </div>
+
+        <form action="dashboard.html" method="GET" id="customer-login-form">
+          <input type="hidden" name="role" value="customer">
+          <!-- Email Field -->
+          <div class="form-group">
+            <label for="email" class="form-label">Email Address</label>
+            <input type="email" id="email" name="email" class="form-control" placeholder="YOUR@EMAIL.COM" required>
+          </div>
+
+          <!-- Password Field -->
+          <div class="form-group">
+            <label for="password" class="form-label">Password</label>
+            <input type="password" id="password" name="password" class="form-control" placeholder="••••••••" required>
+          </div>
+
+          <!-- Remember me & forgot password -->
+          <div class="form-footer-links">
+            <label class="form-checkbox">
+              <input type="checkbox" name="remember">
+              Remember Me
+            </label>
+            <a href="#">Forgot Password?</a>
+          </div>
+
+          <!-- Submit Button -->
+          <button type="submit" class="nb-btn yellow" style="width: 100%; font-size: 1rem; padding: 14px;">
+            LOGIN TO CUSTOMER PORTAL <i class="fa-solid fa-arrow-right" style="margin-left: 8px;"></i>
+          </button>
+        </form>
+
+        <!-- New Customer Sign Up Link -->
+        <div class="login-footer-switch">
+          New customer? <a href="#">Sign Up Now</a>
+        </div>
+
+        <!-- Bottom alternate portal link -->
+        <div class="bottom-link-bar">
+          <a href="provider-login.html">Are you a provider? → Provider Login</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Theme Toggle Script -->
+  <script src="theme-toggle.js"></script>
+</body>
+</html>

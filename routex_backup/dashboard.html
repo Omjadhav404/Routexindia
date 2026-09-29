@@ -1,0 +1,1915 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RouteX | Admin Dashboard</title>
+  <meta name="description" content="RouteX operational and financial logistics dashboard dashboard for administrators.">
+  <link rel="stylesheet" href="routex-styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Chart.js for data visualization -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Leaflet.js for interactive mapping -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+</head>
+<body class="fade-in">
+
+  <div class="dashboard-layout">
+    
+    <!-- LEFT SIDEBAR -->
+    <aside class="dashboard-sidebar" id="sidebar">
+      <div class="sidebar-brand">
+        <a href="index.html" class="logo">
+          <span class="logo-highlight">RouteX</span>
+        </a>
+      </div>
+      
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-item active" data-nav="ai">
+          <a href="#" onclick="switchNav(this, 'ai')">
+            <i class="fa-solid fa-robot"></i> AI Command Center
+          </a>
+        </li>
+        <li class="sidebar-nav-item" data-nav="tracking">
+          <a href="#" onclick="switchNav(this, 'tracking')">
+            <i class="fa-solid fa-location-crosshairs"></i> Live Tracking
+          </a>
+        </li>
+        <li class="sidebar-nav-item" data-nav="admin">
+          <a href="#" onclick="switchNav(this, 'admin')">
+            <i class="fa-solid fa-shield-halved"></i> Platform Admin
+          </a>
+        </li>
+        <li class="sidebar-nav-item" data-nav="customer">
+          <a href="customer-login.html">
+            <i class="fa-solid fa-circle-user"></i> Customer Portal
+          </a>
+        </li>
+        <li class="sidebar-nav-item" data-nav="provider">
+          <a href="provider-login.html">
+            <i class="fa-solid fa-truck-ramp-box"></i> Provider Portal
+          </a>
+        </li>
+        <li class="sidebar-nav-item" data-nav="fleet">
+          <a href="#" onclick="switchNav(this, 'fleet')">
+            <i class="fa-solid fa-truck-moving"></i> Fleet Management
+          </a>
+        </li>
+        <li class="sidebar-nav-item" data-nav="drivers">
+          <a href="#" onclick="switchNav(this, 'drivers')">
+            <i class="fa-solid fa-hard-hat"></i> Driver Operations
+          </a>
+        </li>
+        <li class="sidebar-nav-item" data-nav="packages">
+          <a href="#" onclick="switchNav(this, 'packages')">
+            <i class="fa-solid fa-box"></i> Package Deliveries
+          </a>
+        </li>
+        <li class="sidebar-nav-item" data-nav="database">
+          <a href="#" onclick="switchNav(this, 'database')">
+            <i class="fa-solid fa-address-book"></i> Customer Database
+          </a>
+        </li>
+        <li class="sidebar-nav-item" data-nav="reports">
+          <a href="#" onclick="switchNav(this, 'reports')">
+            <i class="fa-solid fa-chart-line"></i> Audits & Reports
+          </a>
+        </li>
+      </ul>
+
+      <div class="sidebar-footer">
+        <div class="mono-font" style="font-size: 0.75rem; font-weight: 700; text-align: center;">
+          SYSTEM: v4.2.1-PROD
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN INTERFACE -->
+    <main class="dashboard-main">
+      
+      <!-- TOP HEADER -->
+      <header class="dashboard-header">
+        <div class="header-left">
+          <!-- Hamburger Button for Mobile -->
+          <button class="hamburger-btn" id="hamburger-toggle" aria-label="Toggle Sidebar" onclick="toggleSidebar()">
+            <i class="fa-solid fa-bars"></i>
+          </button>
+          
+          <span class="dashboard-title-badge" id="current-section-title">AI COMMAND CENTER</span>
+        </div>
+
+        <!-- Search Bar -->
+        <div class="header-search">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <input type="text" placeholder="SEARCH ORDER, DRIVER, HUBS..." aria-label="Search">
+        </div>
+
+        <div class="header-right">
+          <!-- Live Date/Time Display -->
+          <div class="live-clock" id="live-clock">
+            04 JUN 2026 | 19:01:40 IST
+          </div>
+
+          <!-- Notification Bell -->
+          <div class="bell-btn" onclick="toggleNotifications(event)" aria-haspopup="true">
+            <i class="fa-solid fa-bell"></i>
+            <span class="bell-badge">3</span>
+            
+            <!-- Notifications popup box -->
+            <div class="notifications-popup" id="notifications-box">
+              <div class="notification-header">
+                <span>RECENT NOTIFICATIONS</span>
+                <span class="nb-badge orange">3 NEW</span>
+              </div>
+              <div class="notification-item unread">
+                <strong>🚨 AI DISPATCH EXCEPTION</strong>
+                <p>Truck MH-12-Q-4029 delayed on Route Bangalore → Mumbai due to rain congestion. Rerouted via NH-48 (+22 mins).</p>
+                <span class="notification-time">4 mins ago</span>
+              </div>
+              <div class="notification-item unread">
+                <strong>📈 SAVINGS REACHED TARGET</strong>
+                <p>Weekly fuel reduction hit 14.2% in Pune logistics hub. AI pathing optimized successfully.</p>
+                <span class="notification-time">1 hr ago</span>
+              </div>
+              <div class="notification-item unread">
+                <strong>👷 HIGH DANGER SCORE WARNING</strong>
+                <p>Driver Ramesh Kumar (ID: DRV-802) flagged for 3 harsh braking events on expressway segment.</p>
+                <span class="notification-time">3 hrs ago</span>
+              </div>
+              <div class="notification-item" style="text-align: center; background: var(--light-gray); font-family: var(--font-mono); font-weight: 700; cursor: pointer;">
+                VIEW ALL LOGS
+              </div>
+            </div>
+          </div>
+
+          <!-- User Avatar Dropdown -->
+          <div class="user-profile-menu" onclick="toggleProfileDropdown(event)" aria-haspopup="true">
+            <div class="user-avatar">A</div>
+            <span class="user-name">Admin User</span>
+            <i class="fa-solid fa-chevron-down" style="font-size: 0.75rem;"></i>
+            
+            <!-- Profile dropdown content -->
+            <div class="profile-dropdown" id="profile-dropdown-box">
+              <div class="dropdown-item">
+                <i class="fa-solid fa-user-gear" style="margin-right: 8px;"></i> Settings
+              </div>
+              <div class="dropdown-item">
+                <i class="fa-solid fa-sliders" style="margin-right: 8px;"></i> Parameters
+              </div>
+              <div class="dropdown-item" style="background: var(--accent-orange); color: white;">
+                <a href="index.html" style="display: block; width: 100%; color: inherit;">
+                  <i class="fa-solid fa-right-from-bracket" style="margin-right: 8px;"></i> LOGOUT
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- CONTENT BODY -->
+      <div class="dashboard-content">
+        
+        <!-- VIEW 1: AI Command Center (Default Main Dashboard) -->
+        <div id="view-ai" class="dashboard-view active">
+          <!-- QUICK OPERATIONS SECTION -->
+          <section class="quick-operations-top" style="margin-bottom: 30px;">
+            <div class="nb-card" style="padding: 15px 20px;">
+              <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 15px;">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                  <strong style="font-family: var(--font-mono); font-size: 1.1rem; text-transform: uppercase;">
+                    <i class="fa-solid fa-wand-magic-sparkles" style="color: var(--accent-orange); margin-right: 6px;"></i> QUICK OPERATIONS:
+                  </strong>
+                </div>
+                <div style="display: flex; gap: 15px; flex-wrap: wrap; flex-grow: 1; justify-content: flex-end;">
+                  <button class="nb-btn yellow" style="padding: 8px 16px; font-size: 0.85rem;" onclick="triggerAction('New Delivery Booking spawned! Order added to live queue.')">
+                    <i class="fa-solid fa-plus"></i> NEW DELIVERY
+                  </button>
+                  <button class="nb-btn orange" style="padding: 8px 16px; font-size: 0.85rem; color: white;" onclick="triggerAction('AI Driver Assignment algorithm triggered.')">
+                    <i class="fa-solid fa-circle-user"></i> ASSIGN DRIVER
+                  </button>
+                  <button class="nb-btn green" style="padding: 8px 16px; font-size: 0.85rem;" onclick="switchNavDirect('tracking')">
+                    <i class="fa-solid fa-route"></i> VIEW ALL ROUTES
+                  </button>
+                  <button class="nb-btn black" style="padding: 8px 16px; font-size: 0.85rem;" onclick="switchNavDirect('reports')">
+                    <i class="fa-solid fa-file-invoice-dollar"></i> GENERATE REPORT
+                  </button>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ROW 1: KPI CARDS -->
+          <section class="dashboard-grid-kpis">
+            <!-- Card 1 -->
+            <div class="nb-card kpi-card">
+              <div class="kpi-header">
+                <span class="kpi-label">TOTAL DELIVERIES</span>
+                <span class="kpi-icon"><i class="fa-solid fa-box" style="color: var(--accent-orange);"></i></span>
+              </div>
+              <div class="kpi-value" id="kpi-deliveries">12,480</div>
+              <div class="kpi-trend up">
+                <i class="fa-solid fa-arrow-trend-up"></i> ↑ 8.4% THIS MONTH
+              </div>
+            </div>
+
+            <!-- Card 2 -->
+            <div class="nb-card kpi-card">
+              <div class="kpi-header">
+                <span class="kpi-label">GROSS REVENUE</span>
+                <span class="kpi-icon"><i class="fa-solid fa-indian-rupee-sign" style="color: var(--primary-yellow); -webkit-text-stroke: 1.5px #000;"></i></span>
+              </div>
+              <div class="kpi-value" id="kpi-revenue">₹48,20,000</div>
+              <div class="kpi-trend up">
+                <i class="fa-solid fa-arrow-trend-up"></i> ↑ 12.1% THIS MONTH
+              </div>
+            </div>
+
+            <!-- Card 3 -->
+            <div class="nb-card kpi-card">
+              <div class="kpi-header">
+                <span class="kpi-label">NET FUEL COSTS</span>
+                <span class="kpi-icon"><i class="fa-solid fa-gas-pump" style="color: var(--pure-black);"></i></span>
+              </div>
+              <div class="kpi-value" id="kpi-fuel">₹6,84,000</div>
+              <div class="kpi-trend down">
+                <i class="fa-solid fa-arrow-trend-down"></i> ↓ 3.2% (SAVINGS)
+              </div>
+            </div>
+
+            <!-- Card 4 -->
+            <div class="nb-card kpi-card">
+              <div class="kpi-header">
+                <span class="kpi-label">ROUTE SAVINGS</span>
+                <span class="kpi-icon"><i class="fa-solid fa-route" style="color: var(--active-green); -webkit-text-stroke: 1px #000;"></i></span>
+              </div>
+              <div class="kpi-value">₹1,20,500</div>
+              <div class="kpi-trend neutral">
+                <i class="fa-solid fa-robot"></i> AI-OPTIMIZED
+              </div>
+            </div>
+          </section>
+
+          <!-- ROW 2: FINANCIAL TRENDS & DRIVER SAFETY -->
+          <section class="dashboard-grid-row2">
+            <!-- Financial Trends Chart -->
+            <div class="nb-card chart-card">
+              <div class="card-title-bar">
+                <h3 class="card-title"><i class="fa-solid fa-chart-line" style="margin-right: 8px;"></i> FINANCIAL TRENDS (LAST 6 MONTHS)</h3>
+                <span class="nb-badge yellow">₹ IN LAKHS</span>
+              </div>
+              <div class="chart-container">
+                <canvas id="financialChart"></canvas>
+              </div>
+            </div>
+
+            <!-- Driver Safety Scorecard -->
+            <div class="nb-card driver-scorecard-card">
+              <div>
+                <div class="card-title-bar">
+                  <h3 class="card-title"><i class="fa-solid fa-shield-heart" style="margin-right: 8px;"></i> DRIVER SAFETY INDEX</h3>
+                  <span class="nb-badge green">ACTIVE AUDIT</span>
+                </div>
+                
+                <div class="safety-hero-box">
+                  <div class="safety-hero-text">
+                    <span class="safety-hero-label">FLEET SAFETY RATING</span>
+                    <span class="safety-hero-num">87 / 100</span>
+                  </div>
+                  <div class="safety-circle-score">87</div>
+                </div>
+
+                <!-- Top 5 Drivers list -->
+                <div class="driver-list">
+                  <div class="driver-row">
+                    <div class="driver-row-header">
+                      <span class="driver-name">Rajesh Kumar (ID: 802)</span>
+                      <span class="nb-badge green">98/100 EXCELLENT</span>
+                    </div>
+                    <div class="driver-progress-bar-outer">
+                      <div class="driver-progress-bar-inner excellent" style="width: 98%;"></div>
+                    </div>
+                  </div>
+
+                  <div class="driver-row">
+                    <div class="driver-row-header">
+                      <span class="driver-name">Amit Sharma (ID: 412)</span>
+                      <span class="nb-badge green">94/100 EXCELLENT</span>
+                    </div>
+                    <div class="driver-progress-bar-outer">
+                      <div class="driver-progress-bar-inner excellent" style="width: 94%;"></div>
+                    </div>
+                  </div>
+
+                  <div class="driver-row">
+                    <div class="driver-row-header">
+                      <span class="driver-name">Vikram Singh (ID: 104)</span>
+                      <span class="nb-badge yellow">85/100 GOOD</span>
+                    </div>
+                    <div class="driver-progress-bar-outer">
+                      <div class="driver-progress-bar-inner good" style="width: 85%;"></div>
+                    </div>
+                  </div>
+
+                  <div class="driver-row">
+                    <div class="driver-row-header">
+                      <span class="driver-name">Suresh Patil (ID: 673)</span>
+                      <span class="nb-badge yellow">81/100 GOOD</span>
+                    </div>
+                    <div class="driver-progress-bar-outer">
+                      <div class="driver-progress-bar-inner good" style="width: 81%;"></div>
+                    </div>
+                  </div>
+
+                  <div class="driver-row">
+                    <div class="driver-row-header">
+                      <span class="driver-name">Karan Johar (ID: 054)</span>
+                      <span class="nb-badge orange" style="color: white;">58/100 AT RISK</span>
+                    </div>
+                    <div class="driver-progress-bar-outer">
+                      <div class="driver-progress-bar-inner risk" style="width: 58%;"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Mini stat pills -->
+              <div class="safety-pills-row">
+                <span class="safety-pill">Harsh Braking: <span>14</span></span>
+                <span class="safety-pill">Overspeeding: <span>3</span></span>
+                <span class="safety-pill">Late Night: <span>18h</span></span>
+              </div>
+            </div>
+          </section>
+
+          <!-- ROW 2.5: WEATHER & TRAFFIC INTELLIGENCE -->
+          <section class="dashboard-grid-weather" style="margin-top: 30px;">
+            <!-- Weather Intel Card -->
+            <div class="nb-card">
+              <div class="card-title-bar">
+                <h3 class="card-title"><i class="fa-solid fa-cloud-sun-rain" style="margin-right: 8px;"></i> WEATHER OPERATIONS INTEL</h3>
+                <span class="nb-badge yellow">MET REGISTRY</span>
+              </div>
+              
+              <div style="display: flex; flex-direction: column; gap: 15px; margin-top: 15px;">
+                <!-- Weather Alert 1 -->
+                <div style="display: flex; align-items: start; gap: 15px; border-bottom: 2px dashed var(--pure-black); padding-bottom: 12px;">
+                  <div style="width: 45px; height: 45px; border: 3px solid #000; background: var(--accent-orange); display: flex; align-items: center; justify-content: center; font-size: 1.3rem; box-shadow: 2px 2px 0px #000; flex-shrink: 0;">
+                    <i class="fa-solid fa-cloud-showers-heavy" style="color: #fff;"></i>
+                  </div>
+                  <div style="flex-grow: 1;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; flex-wrap: wrap; gap: 5px;">
+                      <strong style="font-family: var(--font-mono); font-size: 0.95rem;">WESTERN GHATS CORRIDOR</strong>
+                      <span class="nb-badge orange" style="color:white; font-size: 0.7rem;">MONSOON ALERT</span>
+                    </div>
+                    <p style="font-size: 0.85rem; line-height: 1.3;">Torrential downpours reported on Mumbai-Pune expressway. AI dispatch advised to restrict container loads to 75% capacity to avoid hydroplaning risk.</p>
+                  </div>
+                </div>
+
+                <!-- Weather Alert 2 -->
+                <div style="display: flex; align-items: start; gap: 15px; border-bottom: 2px dashed var(--pure-black); padding-bottom: 12px;">
+                  <div style="width: 45px; height: 45px; border: 3px solid #000; background: var(--primary-yellow); display: flex; align-items: center; justify-content: center; font-size: 1.3rem; box-shadow: 2px 2px 0px #000; flex-shrink: 0;">
+                    <i class="fa-solid fa-wind" style="color: #000;"></i>
+                  </div>
+                  <div style="flex-grow: 1;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; flex-wrap: wrap; gap: 5px;">
+                      <strong style="font-family: var(--font-mono); font-size: 0.95rem;">DELHI NCR / HARYANA</strong>
+                      <span class="nb-badge yellow" style="font-size: 0.7rem;">DUST WARN</span>
+                    </div>
+                    <p style="font-size: 0.85rem; line-height: 1.3;">Severe summer dust storm has reduced visibility near Delhi-Gurugram border. Watchdog system warning drivers to maintain 100m stopping distance.</p>
+                  </div>
+                </div>
+
+                <!-- Weather Alert 3 -->
+                <div style="display: flex; align-items: start; gap: 15px;">
+                  <div style="width: 45px; height: 45px; border: 3px solid #000; background: var(--active-green); display: flex; align-items: center; justify-content: center; font-size: 1.3rem; box-shadow: 2px 2px 0px #000; flex-shrink: 0;">
+                    <i class="fa-solid fa-sun" style="color: #000;"></i>
+                  </div>
+                  <div style="flex-grow: 1;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; flex-wrap: wrap; gap: 5px;">
+                      <strong style="font-family: var(--font-mono); font-size: 0.95rem;">BANGALORE-CHENNAI</strong>
+                      <span class="nb-badge green" style="font-size: 0.7rem;">CLEAR SKY</span>
+                    </div>
+                    <p style="font-size: 0.85rem; line-height: 1.3;">Clear operational conditions. Fleet optimization algorithms set to high efficiency mode (speed limits at max baseline +10% standard scale).</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Traffic Intel Card -->
+            <div class="nb-card">
+              <div class="card-title-bar">
+                <h3 class="card-title"><i class="fa-solid fa-traffic-light" style="margin-right: 8px;"></i> ROUTE TRAFFIC GRIDLOCK INTEL</h3>
+                <span class="nb-badge orange" style="color:white;">DELAY TELEMETRY</span>
+              </div>
+              
+              <div style="display: flex; flex-direction: column; gap: 15px; margin-top: 15px;">
+                <!-- Traffic Row 1 -->
+                <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 2px dashed var(--pure-black); padding-bottom: 12px; gap: 10px;">
+                  <div>
+                    <strong style="display: block; font-family: var(--font-mono); font-size: 0.95rem;">NH-48 (DELHI-MUMBAI)</strong>
+                    <span style="font-size: 0.85rem;">Congestion near Jaipur Bypass due to construction work.</span>
+                  </div>
+                  <div style="text-align: right; flex-shrink: 0;">
+                    <span class="nb-badge orange" style="color:white; display:block; margin-bottom:4px;">+45 MIN DELAY</span>
+                    <span style="font-size: 0.75rem; font-family: var(--font-mono); font-weight: 700;">REROUTING ENGAGED</span>
+                  </div>
+                </div>
+
+                <!-- Traffic Row 2 -->
+                <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 2px dashed var(--pure-black); padding-bottom: 12px; gap: 10px;">
+                  <div>
+                    <strong style="display: block; font-family: var(--font-mono); font-size: 0.95rem;">NH-4 (BANGALORE-PUNE)</strong>
+                    <span style="font-size: 0.85rem;">Active toll lane backup at Maharashtra border checkpoints.</span>
+                  </div>
+                  <div style="text-align: right; flex-shrink: 0;">
+                    <span class="nb-badge yellow" style="display:block; margin-bottom:4px;">+20 MIN DELAY</span>
+                    <span style="font-size: 0.75rem; font-family: var(--font-mono); font-weight: 700; color: var(--active-green);">PRE-PAID FASTAG OK</span>
+                  </div>
+                </div>
+
+                <!-- Traffic Row 3 -->
+                <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
+                  <div>
+                    <strong style="display: block; font-family: var(--font-mono); font-size: 0.95rem;">NH-2 (KOLKATA-DELHI)</strong>
+                    <span style="font-size: 0.85rem;">Slow moving traffic near Varanasi corridor bypass.</span>
+                  </div>
+                  <div style="text-align: right; flex-shrink: 0;">
+                    <span class="nb-badge yellow" style="display:block; margin-bottom:4px;">+15 MIN DELAY</span>
+                    <span style="font-size: 0.75rem; font-family: var(--font-mono); font-weight: 700;">NORMAL RANGE</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ROW 3: RECENT DISPATCHES -->
+          <section style="margin-top: 30px;">
+            <div class="nb-card table-card" style="width: 100%;">
+              <div class="card-title-bar">
+                <h3 class="card-title"><i class="fa-solid fa-list-check" style="margin-right: 8px;"></i> RECENT DISPATCHES</h3>
+                <span class="nb-badge yellow">LIVE QUEUE</span>
+              </div>
+              
+              <div class="table-wrapper">
+                <table class="nb-table">
+                  <thead>
+                    <tr>
+                      <th>ORDER ID</th>
+                      <th>CUSTOMER</th>
+                      <th>ROUTE</th>
+                      <th>STATUS</th>
+                      <th>DRIVER</th>
+                    </tr>
+                  </thead>
+                  <tbody id="orders-table-body">
+                    <tr>
+                      <td class="font-mono-cell">#RTX-8801</td>
+                      <td>Tata Steel Ltd</td>
+                      <td>Jamshedpur → Pune</td>
+                      <td><span class="nb-badge yellow">IN TRANSIT</span></td>
+                      <td>Rajesh K.</td>
+                    </tr>
+                    <tr>
+                      <td class="font-mono-cell">#RTX-8802</td>
+                      <td>Reliance Ind</td>
+                      <td>Jamnagar → Mumbai</td>
+                      <td><span class="nb-badge green">DELIVERED</span></td>
+                      <td>Amit S.</td>
+                    </tr>
+                    <tr>
+                      <td class="font-mono-cell">#RTX-8803</td>
+                      <td>Flipkart Hub</td>
+                      <td>Bangalore → Chennai</td>
+                      <td><span class="nb-badge yellow">IN TRANSIT</span></td>
+                      <td>Vikram S.</td>
+                    </tr>
+                    <tr>
+                      <td class="font-mono-cell">#RTX-8804</td>
+                      <td>Maruti Suzuki</td>
+                      <td>Gurugram → Delhi</td>
+                      <td><span class="nb-badge gray">PENDING</span></td>
+                      <td>Suresh P.</td>
+                    </tr>
+                    <tr>
+                      <td class="font-mono-cell">#RTX-8805</td>
+                      <td>Zomato Store</td>
+                      <td>Mumbai Hub Local</td>
+                      <td><span class="nb-badge green">DELIVERED</span></td>
+                      <td>Karan J.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <!-- VIEW 2: Live Tracking Hub -->
+        <div id="view-tracking" class="dashboard-view">
+          <div class="card-title-bar" style="margin-bottom: 20px;">
+            <h2 class="card-title"><i class="fa-solid fa-location-crosshairs" style="margin-right:8px;"></i> LIVE TRACKING & DEPLOYMENT MAP</h2>
+            <span class="nb-badge green">ACTIVE CHANNELS</span>
+          </div>
+          
+          <div class="tracking-container">
+            <!-- Left panel: Vehicles List -->
+            <div class="tracking-sidebar">
+              <div class="tracking-sidebar-header">VEHICLE RADAR</div>
+              <ul class="tracking-list" id="radar-vehicle-list">
+                <li class="tracking-item active" onclick="selectRadarVehicle('MH-12-Q-4029')">
+                  <div style="display:flex; justify-content:space-between; font-weight:700;">
+                    <span>MH-12-Q-4029</span>
+                    <span class="nb-badge yellow">MOVING</span>
+                  </div>
+                  <div style="font-size:0.8rem; color:#555; margin-top:4px;">Driver: Rajesh Kumar | Route: BNG → MUM</div>
+                </li>
+                <li class="tracking-item" onclick="selectRadarVehicle('DL-03-A-9901')">
+                  <div style="display:flex; justify-content:space-between; font-weight:700;">
+                    <span>DL-03-A-9901</span>
+                    <span class="nb-badge yellow">MOVING</span>
+                  </div>
+                  <div style="font-size:0.8rem; color:#555; margin-top:4px;">Driver: Amit Sharma | Route: DEL Local</div>
+                </li>
+                <li class="tracking-item" onclick="selectRadarVehicle('KA-05-M-2210')">
+                  <div style="display:flex; justify-content:space-between; font-weight:700;">
+                    <span>KA-05-M-2210</span>
+                    <span class="nb-badge yellow">MOVING</span>
+                  </div>
+                  <div style="font-size:0.8rem; color:#555; margin-top:4px;">Driver: Vikram Singh | Route: BNG → CHN</div>
+                </li>
+                <li class="tracking-item" onclick="selectRadarVehicle('MH-04-E-5520')">
+                  <div style="display:flex; justify-content:space-between; font-weight:700;">
+                    <span>MH-04-E-5520</span>
+                    <span class="nb-badge gray">LOADING</span>
+                  </div>
+                  <div style="font-size:0.8rem; color:#555; margin-top:4px;">Driver: Suresh Patil | Route: MUM Local</div>
+                </li>
+                <li class="tracking-item" onclick="selectRadarVehicle('WB-02-Y-7731')">
+                  <div style="display:flex; justify-content:space-between; font-weight:700;">
+                    <span>WB-02-Y-7731</span>
+                    <span class="nb-badge green" style="color: black;">ONLINE</span>
+                  </div>
+                  <div style="font-size:0.8rem; color:#555; margin-top:4px;">Driver: Karan Johar | Route: CCU Local</div>
+                </li>
+              </ul>
+            </div>
+
+            <!-- Right panel: Map and Details -->
+            <div class="tracking-map-panel">
+              <div class="tracking-map-display">
+                <div id="leaflet-map" style="width: 100%; height: 100%; z-index: 10;"></div>
+              </div>
+
+              <!-- Details card -->
+              <div class="nb-card tracking-details-card">
+                <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap: 15px;">
+                  <div>
+                    <span style="font-size:0.75rem; font-family:var(--font-mono); color:#666; display:block;">ACTIVE VEHICLE</span>
+                    <strong style="font-size:1.2rem; font-family:var(--font-mono); color:var(--accent-orange);" id="radar-detail-plate">MH-12-Q-4029</strong>
+                  </div>
+                  <div>
+                    <span style="font-size:0.75rem; font-family:var(--font-mono); color:#666; display:block;">DRIVER</span>
+                    <strong style="font-size:1.1rem;" id="radar-detail-driver">Rajesh Kumar</strong>
+                  </div>
+                  <div>
+                    <span style="font-size:0.75rem; font-family:var(--font-mono); color:#666; display:block;">TELEMETRY STATS</span>
+                    <strong style="font-size:1.1rem;" id="radar-detail-telemetry">68 KM/H | 82% FUEL</strong>
+                  </div>
+                  <div>
+                    <span style="font-size:0.75rem; font-family:var(--font-mono); color:#666; display:block;">CARGO / ROUTE</span>
+                    <strong style="font-size:1.1rem;" id="radar-detail-load">12 TONS | BNG → MUM</strong>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- VIEW 3: Platform Admin -->
+        <div id="view-admin" class="dashboard-view">
+          <div class="card-title-bar">
+            <h2 class="card-title"><i class="fa-solid fa-shield-halved" style="margin-right:8px;"></i> PLATFORM CONTROL PANEL</h2>
+            <span class="nb-badge orange" style="color:white;">CORE ENGINES</span>
+          </div>
+
+          <div class="admin-settings-list">
+            <!-- Toggle 1 -->
+            <div class="admin-setting-item">
+              <div>
+                <strong style="display:block; font-size:1.1rem; font-family:var(--font-mono);">🤖 AI ROUTING DISPATCH ENGINE</strong>
+                <span style="font-size:0.9rem; color:#555;">Automatically assigns the nearest and lowest-cost driver to incoming orders.</span>
+              </div>
+              <label class="nb-switch-label">
+                <div class="nb-switch">
+                  <input type="checkbox" id="admin-ai-toggle" checked>
+                  <span class="nb-slider"></span>
+                </div>
+              </label>
+            </div>
+
+            <!-- Toggle 2 -->
+            <div class="admin-setting-item">
+              <div>
+                <strong style="display:block; font-size:1.1rem; font-family:var(--font-mono);">⚡ DYNAMIC SURGE PRICE ENGINE</strong>
+                <span style="font-size:0.9rem; color:#555;">Surcharges logistics rates during heavy traffic gridlock or severe weather.</span>
+              </div>
+              <label class="nb-switch-label">
+                <div class="nb-switch">
+                  <input type="checkbox" id="admin-surge-toggle" checked>
+                  <span class="nb-slider"></span>
+                </div>
+              </label>
+            </div>
+
+            <!-- Toggle 3 -->
+            <div class="admin-setting-item">
+              <div>
+                <strong style="display:block; font-size:1.1rem; font-family:var(--font-mono);">💬 AUTO-SMS CUSTOMER DISPATCH</strong>
+                <span style="font-size:0.9rem; color:#555;">Pushes automated GPS tracking updates directly to customer phone numbers.</span>
+              </div>
+              <label class="nb-switch-label">
+                <div class="nb-switch">
+                  <input type="checkbox" id="admin-sms-toggle">
+                  <span class="nb-slider"></span>
+                </div>
+              </label>
+            </div>
+
+            <!-- Toggle 4 -->
+            <div class="admin-setting-item">
+              <div>
+                <strong style="display:block; font-size:1.1rem; font-family:var(--font-mono);">🚨 DRIVER FATIGUE WATCHDOG</strong>
+                <span style="font-size:0.9rem; color:#555;">Flags driver telemetry if speed thresholds are breached or driving exceeds 8 hrs.</span>
+              </div>
+              <label class="nb-switch-label">
+                <div class="nb-switch">
+                  <input type="checkbox" id="admin-watchdog-toggle" checked>
+                  <span class="nb-slider"></span>
+                </div>
+              </label>
+            </div>
+
+            <!-- Settings fields -->
+            <div class="nb-card" style="margin-top:20px; display:flex; flex-direction:column; gap:15px;">
+              <h3 class="mono-font" style="font-size:1.1rem; border-bottom:2px solid #000; padding-bottom:8px;">DISPATCH PARAMETERS</h3>
+              <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px;">
+                <div class="form-group">
+                  <label class="form-label">Route Audit Interval (sec)</label>
+                  <input type="number" class="form-control" value="30" style="padding:8px;">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Max Range Allocation (km)</label>
+                  <input type="number" class="form-control" value="250" style="padding:8px;">
+                </div>
+              </div>
+              
+              <div style="display:flex; gap:15px; margin-top:10px;">
+                <button class="nb-btn yellow" onclick="triggerAction('Admin parameters saved successfully!')">SAVE CONFIGURATION</button>
+                <button class="nb-btn black" onclick="triggerAction('Platform simulations reset to baseline.')">RESET BASE METRICS</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- VIEW 4: Fleet Management -->
+        <div id="view-fleet" class="dashboard-view">
+          <div class="card-title-bar" style="margin-bottom: 20px;">
+            <h2 class="card-title"><i class="fa-solid fa-truck-moving" style="margin-right:8px;"></i> FLEET OPERATIONAL INDEX</h2>
+            <button class="nb-btn yellow" style="padding:8px 16px; font-size:0.85rem;" onclick="openModal('vehicle-modal')">
+              <i class="fa-solid fa-plus"></i> REGISTER VEHICLE
+            </button>
+          </div>
+
+          <div class="fleet-grid" id="fleet-list-container">
+            <div class="nb-card fleet-card">
+              <div>
+                <div class="fleet-card-header">
+                  <span class="fleet-card-plate">MH-12-Q-4029</span>
+                  <span class="nb-badge yellow">IN SERVICE</span>
+                </div>
+                <strong style="display:block; margin-bottom:8px;">HEAVY TRUCK (16T Capacity)</strong>
+                <p style="font-size:0.9rem; margin-bottom:4px;"><strong>Driver:</strong> Rajesh Kumar</p>
+                <p style="font-size:0.9rem; margin-bottom:12px;"><strong>Assigned Zone:</strong> West Hub (Pune)</p>
+              </div>
+              <div>
+                <span style="font-size:0.75rem; font-family:var(--font-mono); font-weight:700; display:block; margin-bottom:4px;">FUEL / ACCUMULATOR</span>
+                <div class="driver-progress-bar-outer" style="height:14px; margin-bottom:8px;">
+                  <div class="driver-progress-bar-inner excellent" style="width: 82%;"></div>
+                </div>
+                <span style="font-size:0.75rem; font-family:var(--font-mono);">82% TELEMETRY OK</span>
+              </div>
+            </div>
+
+            <div class="nb-card fleet-card">
+              <div>
+                <div class="fleet-card-header">
+                  <span class="fleet-card-plate">DL-03-A-9901</span>
+                  <span class="nb-badge yellow">IN SERVICE</span>
+                </div>
+                <strong style="display:block; margin-bottom:8px;">DELIVERY VAN (3.5T Capacity)</strong>
+                <p style="font-size:0.9rem; margin-bottom:4px;"><strong>Driver:</strong> Amit Sharma</p>
+                <p style="font-size:0.9rem; margin-bottom:12px;"><strong>Assigned Zone:</strong> North Hub (Delhi)</p>
+              </div>
+              <div>
+                <span style="font-size:0.75rem; font-family:var(--font-mono); font-weight:700; display:block; margin-bottom:4px;">FUEL / ACCUMULATOR</span>
+                <div class="driver-progress-bar-outer" style="height:14px; margin-bottom:8px;">
+                  <div class="driver-progress-bar-inner good" style="width: 54%;"></div>
+                </div>
+                <span style="font-size:0.75rem; font-family:var(--font-mono);">54% TELEMETRY OK</span>
+              </div>
+            </div>
+
+            <div class="nb-card fleet-card">
+              <div>
+                <div class="fleet-card-header">
+                  <span class="fleet-card-plate">KA-05-M-2210</span>
+                  <span class="nb-badge yellow">IN SERVICE</span>
+                </div>
+                <strong style="display:block; margin-bottom:8px;">CONTAINER TRUCK (12T Capacity)</strong>
+                <p style="font-size:0.9rem; margin-bottom:4px;"><strong>Driver:</strong> Vikram Singh</p>
+                <p style="font-size:0.9rem; margin-bottom:12px;"><strong>Assigned Zone:</strong> South Hub (Bangalore)</p>
+              </div>
+              <div>
+                <span style="font-size:0.75rem; font-family:var(--font-mono); font-weight:700; display:block; margin-bottom:4px;">FUEL / ACCUMULATOR</span>
+                <div class="driver-progress-bar-outer" style="height:14px; margin-bottom:8px;">
+                  <div class="driver-progress-bar-inner excellent" style="width: 90%;"></div>
+                </div>
+                <span style="font-size:0.75rem; font-family:var(--font-mono);">90% TELEMETRY OK</span>
+              </div>
+            </div>
+
+            <div class="nb-card fleet-card">
+              <div>
+                <div class="fleet-card-header">
+                  <span class="fleet-card-plate">MH-04-E-5520</span>
+                  <span class="nb-badge gray">IN LOADING</span>
+                </div>
+                <strong style="display:block; margin-bottom:8px;">LIGHT TATA APE (1.2T Capacity)</strong>
+                <p style="font-size:0.9rem; margin-bottom:4px;"><strong>Driver:</strong> Suresh Patil</p>
+                <p style="font-size:0.9rem; margin-bottom:12px;"><strong>Assigned Zone:</strong> West Hub (Mumbai)</p>
+              </div>
+              <div>
+                <span style="font-size:0.75rem; font-family:var(--font-mono); font-weight:700; display:block; margin-bottom:4px;">FUEL / ACCUMULATOR</span>
+                <div class="driver-progress-bar-outer" style="height:14px; margin-bottom:8px;">
+                  <div class="driver-progress-bar-inner risk" style="width: 38%;"></div>
+                </div>
+                <span style="font-size:0.75rem; font-family:var(--font-mono); color:var(--accent-orange); font-weight:700;">38% - LOW FUEL ALERT</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- VIEW 5: Driver Operations -->
+        <div id="view-drivers" class="dashboard-view">
+          <div class="card-title-bar" style="margin-bottom: 20px;">
+            <h2 class="card-title"><i class="fa-solid fa-hard-hat" style="margin-right:8px;"></i> OPERATIONAL DRIVERS LEDGER</h2>
+            <button class="nb-btn orange" style="padding:8px 16px; font-size:0.85rem; color:white;" onclick="openModal('driver-modal')">
+              <i class="fa-solid fa-plus"></i> ADD NEW DRIVER
+            </button>
+          </div>
+
+          <div class="nb-card" style="padding:0; overflow:hidden;">
+            <table class="nb-table" style="width:100%;">
+              <thead>
+                <tr>
+                  <th>DRV ID</th>
+                  <th>DRIVER NAME</th>
+                  <th>HUB ASSIGNMENT</th>
+                  <th>SAFETY INDEX</th>
+                  <th>STATUS</th>
+                  <th>ACTIONS</th>
+                </tr>
+              </thead>
+              <tbody id="drivers-table-body">
+                <tr>
+                  <td class="font-mono-cell">#DRV-802</td>
+                  <td><strong>Rajesh Kumar</strong></td>
+                  <td>West Hub (Pune)</td>
+                  <td><span class="nb-badge green">98/100</span></td>
+                  <td><span class="nb-badge green" id="badge-drv-802">ACTIVE</span></td>
+                  <td><button class="nb-btn yellow" style="padding:4px 8px; font-size:0.75rem;" onclick="suspendDriver('#DRV-802', this)">SUSPEND</button></td>
+                </tr>
+                <tr>
+                  <td class="font-mono-cell">#DRV-412</td>
+                  <td><strong>Amit Sharma</strong></td>
+                  <td>North Hub (Delhi)</td>
+                  <td><span class="nb-badge green">94/100</span></td>
+                  <td><span class="nb-badge green" id="badge-drv-412">ACTIVE</span></td>
+                  <td><button class="nb-btn yellow" style="padding:4px 8px; font-size:0.75rem;" onclick="suspendDriver('#DRV-412', this)">SUSPEND</button></td>
+                </tr>
+                <tr>
+                  <td class="font-mono-cell">#DRV-104</td>
+                  <td><strong>Vikram Singh</strong></td>
+                  <td>South Hub (Bangalore)</td>
+                  <td><span class="nb-badge yellow">85/100</span></td>
+                  <td><span class="nb-badge green" id="badge-drv-104">ACTIVE</span></td>
+                  <td><button class="nb-btn yellow" style="padding:4px 8px; font-size:0.75rem;" onclick="suspendDriver('#DRV-104', this)">SUSPEND</button></td>
+                </tr>
+                <tr>
+                  <td class="font-mono-cell">#DRV-673</td>
+                  <td><strong>Suresh Patil</strong></td>
+                  <td>West Hub (Mumbai)</td>
+                  <td><span class="nb-badge yellow">81/100</span></td>
+                  <td><span class="nb-badge green" id="badge-drv-673">ACTIVE</span></td>
+                  <td><button class="nb-btn yellow" style="padding:4px 8px; font-size:0.75rem;" onclick="suspendDriver('#DRV-673', this)">SUSPEND</button></td>
+                </tr>
+                <tr>
+                  <td class="font-mono-cell">#DRV-054</td>
+                  <td><strong>Karan Johar</strong></td>
+                  <td>East Hub (Kolkata)</td>
+                  <td><span class="nb-badge orange" style="color:white;">58/100</span></td>
+                  <td><span class="nb-badge yellow" id="badge-drv-054">STANDBY</span></td>
+                  <td><button class="nb-btn yellow" style="padding:4px 8px; font-size:0.75rem;" onclick="suspendDriver('#DRV-054', this)">SUSPEND</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- VIEW 6: Package Deliveries -->
+        <div id="view-packages" class="dashboard-view">
+          <div class="card-title-bar">
+            <h2 class="card-title"><i class="fa-solid fa-box" style="margin-right:8px;"></i> BOOK SHIPMENTS & EXPRESS ROUTING</h2>
+            <span class="nb-badge yellow">PARCEL DISPATCH</span>
+          </div>
+
+          <div style="display:grid; grid-template-columns: 350px 1fr; gap:30px; margin-top:20px;">
+            <!-- Form Card -->
+            <div class="nb-card">
+              <h3 class="mono-font" style="font-size:1.1rem; border-bottom:2px solid #000; padding-bottom:8px; margin-bottom:15px;">BOOK PRIORITY WAYBILL</h3>
+              <form id="booking-parcel-form" onsubmit="bookParcel(event)">
+                <div class="form-group">
+                  <label class="form-label">Client Name</label>
+                  <select id="book-client" class="form-control" style="padding:8px;">
+                    <option value="Tata Steel Ltd">Tata Steel Ltd</option>
+                    <option value="Reliance Ind">Reliance Ind</option>
+                    <option value="Flipkart Hub">Flipkart Hub</option>
+                    <option value="Maruti Suzuki">Maruti Suzuki</option>
+                    <option value="Zomato Store">Zomato Store</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Destination Route</label>
+                  <select id="book-route" class="form-control" style="padding:8px;">
+                    <option value="Mumbai → Pune">Mumbai → Pune</option>
+                    <option value="Kolkata → Patna">Kolkata → Patna</option>
+                    <option value="Delhi → Agra">Delhi → Agra</option>
+                    <option value="Bangalore → Chennai">Bangalore → Chennai</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Package Weight (KG)</label>
+                  <input type="number" id="book-weight" class="form-control" value="50" required style="padding:8px;">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Delivery Priority</label>
+                  <select id="book-priority" class="form-control" style="padding:8px;">
+                    <option value="STANDARD">STANDARD</option>
+                    <option value="EXPRESS">EXPRESS</option>
+                    <option value="URGENT">URGENT</option>
+                  </select>
+                </div>
+                <button type="submit" class="nb-btn yellow" style="width:100%; margin-top:10px;">DISPATCH TO LINE</button>
+              </form>
+            </div>
+
+            <!-- Ledger Table -->
+            <div class="nb-card" style="padding:0;">
+              <div style="background:#000; color:#fff; font-family:var(--font-mono); padding:10px 15px; font-weight:700;">LIVE DISPATCH MATRIX</div>
+              <table class="nb-table">
+                <thead>
+                  <tr>
+                    <th>WAYBILL</th>
+                    <th>SENDER</th>
+                    <th>ROUTE</th>
+                    <th>WEIGHT</th>
+                    <th>PRIORITY</th>
+                    <th>STATUS</th>
+                  </tr>
+                </thead>
+                <tbody id="packages-table-body">
+                  <tr>
+                    <td class="font-mono-cell">#RTX-PKG-209</td>
+                    <td>Tata Steel Ltd</td>
+                    <td>Mumbai → Pune</td>
+                    <td>1450 KG</td>
+                    <td><span class="nb-badge orange" style="color:white;">URGENT</span></td>
+                    <td><span class="nb-badge yellow">QUEUED</span></td>
+                  </tr>
+                  <tr>
+                    <td class="font-mono-cell">#RTX-PKG-104</td>
+                    <td>Reliance Ind</td>
+                    <td>Jamnagar → Local</td>
+                    <td>500 KG</td>
+                    <td><span class="nb-badge gray">STANDARD</span></td>
+                    <td><span class="nb-badge green">ROUTED</span></td>
+                  </tr>
+                  <tr>
+                    <td class="font-mono-cell">#RTX-PKG-881</td>
+                    <td>Flipkart Hub</td>
+                    <td>Bangalore → Chennai</td>
+                    <td>240 KG</td>
+                    <td><span class="nb-badge yellow">EXPRESS</span></td>
+                    <td><span class="nb-badge yellow">QUEUED</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- VIEW 7: Customer Database -->
+        <div id="view-database" class="dashboard-view">
+          <div class="card-title-bar" style="margin-bottom: 20px;">
+            <h2 class="card-title"><i class="fa-solid fa-address-book" style="margin-right:8px;"></i> B2B CLIENT MANAGEMENT (CRM)</h2>
+            <span class="nb-badge yellow">ACTIVE CUSTOMERS</span>
+          </div>
+
+          <div class="nb-card" style="padding:0;">
+            <table class="nb-table">
+              <thead>
+                <tr>
+                  <th>CLIENT CODE</th>
+                  <th>COMPANY NAME</th>
+                  <th>ACCOUNT CATEGORY</th>
+                  <th>EST. SHIPMENTS/MO</th>
+                  <th>ACTIVE CONTRACT</th>
+                  <th>TIER STATE</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="font-mono-cell">#CLI-TATA</td>
+                  <td>Tata Steel Ltd (Jamshedpur)</td>
+                  <td>Manufacturing / Heavy Industrial Logistics</td>
+                  <td>350 Shipments</td>
+                  <td><span class="nb-badge green">ACTIVE</span></td>
+                  <td><span class="nb-badge yellow">PLATINUM</span></td>
+                </tr>
+                <tr>
+                  <td class="font-mono-cell">#CLI-RELI</td>
+                  <td>Reliance Industries (Jamnagar)</td>
+                  <td>Chemicals & Refineries Supply Chain</td>
+                  <td>580 Shipments</td>
+                  <td><span class="nb-badge green">ACTIVE</span></td>
+                  <td><span class="nb-badge yellow">PLATINUM</span></td>
+                </tr>
+                <tr>
+                  <td class="font-mono-cell">#CLI-FLIP</td>
+                  <td>Flipkart Logistics Hub (Bangalore)</td>
+                  <td>B2C Ecommerce Distribution</td>
+                  <td>1200 Shipments</td>
+                  <td><span class="nb-badge green">ACTIVE</span></td>
+                  <td><span class="nb-badge yellow">PLATINUM</span></td>
+                </tr>
+                <tr>
+                  <td class="font-mono-cell">#CLI-MARU</td>
+                  <td>Maruti Suzuki Pvt Ltd (Gurugram)</td>
+                  <td>Automotive Part Dispatches</td>
+                  <td>180 Shipments</td>
+                  <td><span class="nb-badge green">ACTIVE</span></td>
+                  <td><span class="nb-badge gray">GOLD TIER</span></td>
+                </tr>
+                <tr>
+                  <td class="font-mono-cell">#CLI-ZOMA</td>
+                  <td>Zomato Store Delivery Hub (Mumbai)</td>
+                  <td>Local Last-Mile Cloud Sourcing</td>
+                  <td>4500 Shipments</td>
+                  <td><span class="nb-badge green">ACTIVE</span></td>
+                  <td><span class="nb-badge yellow">PLATINUM</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- VIEW 8: Audits & Reports -->
+        <div id="view-reports" class="dashboard-view">
+          <div class="card-title-bar">
+            <h2 class="card-title"><i class="fa-solid fa-chart-line" style="margin-right:8px;"></i> COMPLIANCE AUDITS & FUEL MARGIN SUMMARY</h2>
+            <button class="nb-btn black" style="padding:8px 16px; font-size:0.85rem;" onclick="generateMockPDF()">
+              <i class="fa-solid fa-file-pdf"></i> EXPORT FISCAL REPORT
+            </button>
+          </div>
+
+          <!-- Live dynamic download container -->
+          <div id="pdf-progress-container" class="nb-card" style="display:none; margin-bottom:20px; border-color:var(--accent-orange);">
+            <strong style="display:block; margin-bottom:8px; font-family:var(--font-mono);">GENERATING COMPLIANCE SCHEDULING LEDGER...</strong>
+            <div class="driver-progress-bar-outer" style="height:20px;">
+              <div id="pdf-progress-bar" class="driver-progress-bar-inner excellent" style="width:0%;"></div>
+            </div>
+            <span id="pdf-percent-text" style="font-size:0.85rem; font-family:var(--font-mono); margin-top:6px; display:block;">COMPILING 0%</span>
+          </div>
+
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:25px; margin-top:20px;">
+            <div class="nb-card">
+              <h3 class="mono-font" style="font-size:1.1rem; border-bottom:2px solid #000; padding-bottom:8px; margin-bottom:12px;">FUEL USAGE RECONCILIATION</h3>
+              <table class="nb-table">
+                <thead>
+                  <tr>
+                    <th>HUB REGION</th>
+                    <th>FUEL COST (INR)</th>
+                    <th>AI OPT. MILEAGE</th>
+                    <th>NET RECONCILED</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>West Hub (Pune)</td>
+                    <td>₹1,84,000</td>
+                    <td>14,200 km</td>
+                    <td><span class="nb-badge green">COMPLIANT</span></td>
+                  </tr>
+                  <tr>
+                    <td>North Hub (Delhi)</td>
+                    <td>₹2,10,000</td>
+                    <td>16,500 km</td>
+                    <td><span class="nb-badge green">COMPLIANT</span></td>
+                  </tr>
+                  <tr>
+                    <td>South Hub (Bangalore)</td>
+                    <td>₹1,60,000</td>
+                    <td>12,900 km</td>
+                    <td><span class="nb-badge green">COMPLIANT</span></td>
+                  </tr>
+                  <tr>
+                    <td>East Hub (Kolkata)</td>
+                    <td>₹1,30,000</td>
+                    <td>9,800 km</td>
+                    <td><span class="nb-badge yellow">PENDING AUDIT</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="nb-card">
+              <h3 class="mono-font" style="font-size:1.1rem; border-bottom:2px solid #000; padding-bottom:8px; margin-bottom:12px;">EMISSION AUDIT MARGINS</h3>
+              <div style="display:flex; flex-direction:column; gap:10px; font-family:var(--font-mono); font-size:0.95rem;">
+                <p><strong>Fleet Average Rating:</strong> Tier 4 EPA Compliant</p>
+                <p><strong>Carbon Saving Multiplier:</strong> 1.4x against standard logistics baseline</p>
+                <p><strong>Electric Vehicle Ratio:</strong> 12% electric delivery vans</p>
+                <div class="driver-progress-bar-outer" style="height:14px; margin-top:5px;">
+                  <div class="driver-progress-bar-inner excellent" style="width:88%;"></div>
+                </div>
+                <span style="font-size:0.75rem; font-family:var(--font-mono); font-weight:700;">FLEET CARBON REDUCTION COMPLIANCE STATUS: 88% TARGET REACHED</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Modals -->
+  <!-- 1. Vehicle Modal -->
+  <div class="nb-modal-overlay" id="vehicle-modal">
+    <div class="nb-modal">
+      <div class="nb-modal-header">
+        <span>REGISTER NEW FLEET VEHICLE</span>
+        <button class="nb-modal-close" onclick="closeModal('vehicle-modal')">×</button>
+      </div>
+      <div class="nb-modal-body">
+        <form onsubmit="submitNewVehicle(event)">
+          <div class="form-group">
+            <label class="form-label">License Plate Number</label>
+            <input type="text" id="m-v-plate" class="form-control" placeholder="E.G. MH-12-AB-1234" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Vehicle Capacity Class</label>
+            <select id="m-v-class" class="form-control">
+              <option value="LIGHT VAN (3.5T)">Light Delivery Van (3.5 Tons)</option>
+              <option value="MEDIUM BOX (8T)">Medium Cargo Box (8 Tons)</option>
+              <option value="HEAVY TRUCK (16T)">Heavy Haulage Truck (16 Tons)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Assigned Driver</label>
+            <input type="text" id="m-v-driver" class="form-control" placeholder="DRIVER NAME" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Operating Hub Zone</label>
+            <input type="text" id="m-v-hub" class="form-control" placeholder="E.G. West Hub (Pune)" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Telemetry Status (%)</label>
+            <input type="number" id="m-v-telemetry" class="form-control" min="0" max="100" value="85" required>
+          </div>
+          <button type="submit" class="nb-btn yellow" style="width:100%; margin-top:15px;">ADD VEHICLE TO FLEET</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. Driver Modal -->
+  <div class="nb-modal-overlay" id="driver-modal">
+    <div class="nb-modal">
+      <div class="nb-modal-header">
+        <span>ADD ACTIVE SERVICE DRIVER</span>
+        <button class="nb-modal-close" onclick="closeModal('driver-modal')">×</button>
+      </div>
+      <div class="nb-modal-body">
+        <form onsubmit="submitNewDriver(event)">
+          <div class="form-group">
+            <label class="form-label">Driver Full Name</label>
+            <input type="text" id="m-d-name" class="form-control" placeholder="E.G. Ram Prasad" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Hub Zone Assignment</label>
+            <input type="text" id="m-d-hub" class="form-control" placeholder="E.G. South Hub (Bangalore)" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Safety Audit Rating</label>
+            <input type="number" id="m-d-safety" class="form-control" min="0" max="100" value="95" required>
+          </div>
+          <button type="submit" class="nb-btn orange" style="width:100%; margin-top:15px; color:white;">REGISTER ACTIVE DRIVER</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Client-side Interactive Logic & Visualization Setup -->
+  <script>
+    // System live clock updates
+    function updateClock() {
+      const clockElement = document.getElementById('live-clock');
+      if (!clockElement) return;
+      
+      const now = new Date();
+      
+      // Formatting options
+      const day = String(now.getDate()).padStart(2, '0');
+      const monthNames = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+      const month = monthNames[now.getMonth()];
+      const year = now.getFullYear();
+      
+      const hours = String(now.getHours()).padStart(2, '0');
+      const minutes = String(now.getMinutes()).padStart(2, '0');
+      const seconds = String(now.getSeconds()).padStart(2, '0');
+      
+      clockElement.textContent = `${day} ${month} ${year} | ${hours}:${minutes}:${seconds} IST`;
+    }
+    
+    setInterval(updateClock, 1000);
+    updateClock(); // Initial call
+
+    // Active role state
+    let activeRole = 'admin';
+
+    // Sidebar navigation switching
+    function switchNav(element, sectionKey) {
+      // Clear active states
+      const navItems = document.querySelectorAll('.sidebar-nav-item');
+      navItems.forEach(item => item.classList.remove('active'));
+      
+      // Highlight current
+      const parentLi = element.closest('.sidebar-nav-item');
+      if (parentLi) {
+        parentLi.classList.add('active');
+      }
+
+      // Update Section Header title
+      const headerTitle = document.getElementById('current-section-title');
+      if (headerTitle) {
+        headerTitle.textContent = element.innerText.trim().toUpperCase();
+      }
+
+      // Hide all view panels
+      const views = document.querySelectorAll('.dashboard-view');
+      views.forEach(view => view.classList.remove('active'));
+
+      // Show selected panel
+      const targetView = document.getElementById('view-' + sectionKey);
+      if (targetView) {
+        targetView.classList.add('active');
+      }
+
+      // Handle sidebar collapse on mobile
+      const sidebar = document.getElementById('sidebar');
+      if (sidebar && window.innerWidth <= 768) {
+        sidebar.classList.remove('open');
+      }
+
+      // Leaflet map refresh size on display
+      if (sectionKey === 'tracking' && typeof map !== 'undefined' && map) {
+        setTimeout(() => {
+          map.invalidateSize();
+        }, 100);
+      }
+    }
+
+    // Direct helper to trigger switch
+    function switchNavDirect(sectionKey) {
+      const activeElement = document.querySelector(`.sidebar-nav [data-nav="${sectionKey}"] a`);
+      if (activeElement) {
+        switchNav(activeElement, sectionKey);
+      } else {
+        // If hidden/disabled in sidebar, show it directly anyway
+        const views = document.querySelectorAll('.dashboard-view');
+        views.forEach(view => view.classList.remove('active'));
+        const targetView = document.getElementById('view-' + sectionKey);
+        if (targetView) {
+          targetView.classList.add('active');
+        }
+        const headerTitle = document.getElementById('current-section-title');
+        if (headerTitle) {
+          headerTitle.textContent = sectionKey.replace('-', ' ').toUpperCase();
+        }
+      }
+      if (sectionKey === 'tracking' && typeof map !== 'undefined' && map) {
+        setTimeout(() => {
+          map.invalidateSize();
+        }, 100);
+      }
+    }
+
+    // Toggle Mobile Sidebar Menu
+    function toggleSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      if (sidebar) {
+        sidebar.classList.toggle('open');
+      }
+    }
+
+    // Profile Dropdown Toggle
+    function toggleProfileDropdown(event) {
+      event.stopPropagation();
+      const dropdown = document.getElementById('profile-dropdown-box');
+      const notifications = document.getElementById('notifications-box');
+      
+      // Hide notifications if showing
+      if (notifications) notifications.classList.remove('show');
+      
+      if (dropdown) {
+        dropdown.classList.toggle('show');
+      }
+    }
+
+    // Notifications Dropdown Toggle
+    function toggleNotifications(event) {
+      event.stopPropagation();
+      const notifications = document.getElementById('notifications-box');
+      const dropdown = document.getElementById('profile-dropdown-box');
+      
+      // Hide profile dropdown if showing
+      if (dropdown) dropdown.classList.remove('show');
+      
+      if (notifications) {
+        notifications.classList.toggle('show');
+      }
+    }
+
+    // Close overlays on click outside
+    document.addEventListener('click', function(event) {
+      const dropdown = document.getElementById('profile-dropdown-box');
+      const notifications = document.getElementById('notifications-box');
+      
+      if (dropdown && !event.target.closest('.user-profile-menu')) {
+        dropdown.classList.remove('show');
+      }
+      
+      if (notifications && !event.target.closest('.bell-btn')) {
+        notifications.classList.remove('show');
+      }
+    });
+
+    // Quick Actions operations triggers
+    function triggerAction(message) {
+      // Brutalist style warning popup
+      alert(`[RouteX Operation Center]\n\n${message}`);
+
+      // If it is new delivery, mock prepend it to the table for visual interest
+      if (message.includes('New Delivery')) {
+        const tableBody = document.getElementById('orders-table-body');
+        if (tableBody) {
+          const newId = `#RTX-${Math.floor(1000 + Math.random() * 9000)}`;
+          const randomCustomers = ["Adani Port", "Reliance Retail", "Wipro Sys", "ITC Limited"];
+          const randomRoutes = ["Delhi → Noida", "Kolkata → Patna", "Mumbai → Goa", "Chennai → Salem"];
+          const customer = randomCustomers[Math.floor(Math.random() * randomCustomers.length)];
+          const route = randomRoutes[Math.floor(Math.random() * randomRoutes.length)];
+          
+          const newRowHtml = `
+            <tr class="fade-in">
+              <td class="font-mono-cell" style="background: #FFFCE0;">${newId}</td>
+              <td>${customer}</td>
+              <td>${route}</td>
+              <td><span class="nb-badge yellow">IN TRANSIT</span></td>
+              <td>AI Driver</td>
+            </tr>
+          `;
+          tableBody.insertAdjacentHTML('afterbegin', newRowHtml);
+        }
+      }
+    }
+    // 1. Interactive Live Tracking Radar Vehicle Selector (Leaflet Integration)
+    const radarData = {
+      'MH-12-Q-4029': {
+        driver: 'Rajesh Kumar',
+        telemetry: '68 KM/H | 82% FUEL',
+        load: '12 TONS | ₹8.5L',
+        route: 'BNG → MUM',
+        coords: [15.6, 74.5], // Kolhapur/Belagavi (halfway)
+        start: [12.9716, 77.5946], // Bangalore
+        end: [19.0760, 72.8777] // Mumbai
+      },
+      'DL-03-A-9901': {
+        driver: 'Amit Sharma',
+        telemetry: '42 KM/H | 54% FUEL',
+        load: '4 TONS | ₹2.1L',
+        route: 'DEL Local',
+        coords: [28.63, 77.22], // Delhi CP
+        start: [28.6139, 77.2090], // Delhi Hub
+        end: [28.5355, 77.3910] // Noida
+      },
+      'KA-05-M-2210': {
+        driver: 'Vikram Singh',
+        telemetry: '75 KM/H | 90% FUEL',
+        load: '14 TONS | ₹14.8L',
+        route: 'BNG → CHN',
+        coords: [12.93, 79.13], // Vellore area
+        start: [12.9716, 77.5946], // Bangalore
+        end: [13.0827, 80.2707] // Chennai
+      },
+      'MH-04-E-5520': {
+        driver: 'Suresh Patil',
+        telemetry: '0 KM/H | 38% FUEL',
+        load: '1.2 TONS (LOADING) | ₹40K',
+        route: 'MUM Local',
+        coords: [19.12, 72.90], // Powai
+        start: [19.0760, 72.8777], // Mumbai
+        end: [18.5204, 73.8567] // Pune
+      },
+      'WB-02-Y-7731': {
+        driver: 'Karan Johar',
+        telemetry: '0 KM/H | 95% FUEL',
+        load: '0.5 TONS | ₹12K',
+        route: 'CCU Local',
+        coords: [22.565, 88.39], // Salt Lake
+        start: [22.5726, 88.3639], // Kolkata
+        end: [22.5744, 88.4338] // Salt Lake
+      }
+    };
+
+    let map;
+    let markers = {};
+    let activePathPolyline;
+    let lightTileLayer;
+    let darkTileLayer;
+
+    function initLeafletMap() {
+      if (document.getElementById('leaflet-map')._leaflet_id) return; // Prevent double-init
+      
+      // Initialize map, centering on center of India
+      map = L.map('leaflet-map', {
+        zoomControl: true,
+        attributionControl: false
+      }).setView([20.5937, 78.9629], 5);
+
+      // CartoDB Voyager Tile Layer (Light Theme)
+      lightTileLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+        maxZoom: 19
+      });
+
+      // CartoDB Dark Matter Tile Layer (Dark Theme)
+      darkTileLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+        maxZoom: 19
+      });
+
+      // Set initial tile layer based on active theme
+      const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+      if (isDark) {
+        darkTileLayer.addTo(map);
+      } else {
+        lightTileLayer.addTo(map);
+      }
+
+      // Hub locations
+      const hubs = {
+        'Delhi Hub (DEL)': [28.6139, 77.2090],
+        'Mumbai Hub (MUM)': [19.0760, 72.8777],
+        'Bangalore Hub (BNG)': [12.9716, 77.5946],
+        'Chennai Hub (CHN)': [13.0827, 80.2707],
+        'Kolkata Hub (CCU)': [22.5726, 88.3639],
+        'Pune Hub (PNQ)': [18.5204, 73.8567]
+      };
+
+      // Add Hub markers to the map
+      for (const [name, coords] of Object.entries(hubs)) {
+        const hubIcon = L.divIcon({
+          html: `<div class="brutalist-marker" style="background:#FFED47;"><i class="fa-solid fa-warehouse"></i></div>`,
+          className: 'hub-icon-marker',
+          iconSize: [28, 28],
+          iconAnchor: [14, 14]
+        });
+        L.marker(coords, { icon: hubIcon }).addTo(map).bindPopup(`<strong>🏢 ${name}</strong><br>RouteX Dispatch Hub`);
+      }
+
+      // Add vehicle markers
+      for (const [plate, data] of Object.entries(radarData)) {
+        const markerIcon = L.divIcon({
+          html: `<div class="brutalist-marker" id="marker-icon-${plate}"><i class="fa-solid fa-truck"></i></div>`,
+          className: 'vehicle-icon-marker',
+          iconSize: [32, 32],
+          iconAnchor: [16, 16]
+        });
+        const marker = L.marker(data.coords, { icon: markerIcon }).addTo(map);
+        marker.bindPopup(`
+          <div style="font-family:'IBM Plex Mono', monospace; font-size:11px; width: 180px;">
+            <strong style="color:var(--accent-orange); font-size:13px; display:block; border-bottom: 2px solid #000; padding-bottom:4px; margin-bottom:4px;">🚚 ${plate}</strong>
+            <strong>DRIVER:</strong> ${data.driver}<br>
+            <strong>ROUTE:</strong> ${data.route}<br>
+            <strong>SPEED:</strong> ${data.telemetry}<br>
+            <strong>CARGO:</strong> ${data.load}
+          </div>
+        `);
+        markers[plate] = marker;
+      }
+
+      // Observe HTML theme toggle updates for Leaflet Map & Chart.js
+      const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+          if (mutation.attributeName === 'data-theme') {
+            const isDarkNow = document.documentElement.getAttribute('data-theme') === 'dark';
+            
+            // Map updates
+            if (map && lightTileLayer && darkTileLayer) {
+              if (isDarkNow) {
+                map.removeLayer(lightTileLayer);
+                darkTileLayer.addTo(map);
+              } else {
+                map.removeLayer(darkTileLayer);
+                lightTileLayer.addTo(map);
+              }
+            }
+
+            // Chart.js updates
+            if (typeof financialChart !== 'undefined' && financialChart) {
+              const tickColor = isDarkNow ? '#e0e0e0' : '#000000';
+              const gridColor = isDarkNow ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.15)';
+              const legendColor = isDarkNow ? '#e0e0e0' : '#000000';
+              const netProfitLineColor = isDarkNow ? '#ffffff' : '#000000';
+
+              financialChart.options.plugins.legend.labels.color = legendColor;
+              financialChart.options.scales.x.ticks.color = tickColor;
+              financialChart.options.scales.x.grid.color = gridColor;
+              financialChart.options.scales.x.border.color = tickColor;
+              financialChart.options.scales.y.ticks.color = tickColor;
+              financialChart.options.scales.y.grid.color = gridColor;
+              financialChart.options.scales.y.border.color = tickColor;
+              
+              financialChart.data.datasets[2].borderColor = netProfitLineColor;
+              financialChart.data.datasets[2].pointBorderColor = netProfitLineColor;
+
+              financialChart.update();
+            }
+          }
+        });
+      });
+      observer.observe(document.documentElement, { attributes: true });
+    }
+
+    function selectRadarVehicle(plate) {
+      // Set active in list
+      const items = document.querySelectorAll('#radar-vehicle-list .tracking-item');
+      items.forEach(item => {
+        item.classList.remove('active');
+        if (item.querySelector('span').textContent.trim() === plate) {
+          item.classList.add('active');
+        }
+      });
+
+      // Update details card
+      const data = radarData[plate];
+      if (data) {
+        document.getElementById('radar-detail-plate').textContent = plate;
+        document.getElementById('radar-detail-driver').textContent = data.driver;
+        document.getElementById('radar-detail-telemetry').textContent = data.telemetry;
+        document.getElementById('radar-detail-load').textContent = `${data.load} [Route: ${data.route}]`;
+
+        // Update Leaflet map view
+        if (map) {
+          // Highlight current marker
+          document.querySelectorAll('.brutalist-marker').forEach(el => {
+            el.classList.remove('active');
+          });
+          const activeEl = document.getElementById(`marker-icon-${plate}`);
+          if (activeEl) {
+            activeEl.classList.add('active');
+          }
+
+          // Open marker popup
+          if (markers[plate]) {
+            markers[plate].openPopup();
+          }
+
+          // Draw routing polyline
+          if (activePathPolyline) {
+            map.removeLayer(activePathPolyline);
+          }
+          activePathPolyline = L.polyline([data.start, data.coords, data.end], {
+            color: '#FF4D00',
+            weight: 4,
+            dashArray: '6, 6'
+          }).addTo(map);
+
+          // Fit map bounds to show the entire route in the context of India
+          map.fitBounds(activePathPolyline.getBounds(), {
+            padding: [30, 30],
+            maxZoom: 6,
+            animate: true,
+            duration: 1.0
+          });
+        }
+      }
+    }
+
+    // 2. Modals Control
+    function openModal(id) {
+      document.getElementById(id).classList.add('show');
+    }
+    function closeModal(id) {
+      document.getElementById(id).classList.remove('show');
+    }
+
+    // 3. Dynamic Lists: Vehicle Fleet Additions
+    function submitNewVehicle(event) {
+      event.preventDefault();
+      const plate = document.getElementById('m-v-plate').value;
+      const vClass = document.getElementById('m-v-class').value;
+      const driver = document.getElementById('m-v-driver').value;
+      const hub = document.getElementById('m-v-hub').value;
+      const telemetry = document.getElementById('m-v-telemetry').value;
+
+      const container = document.getElementById('fleet-list-container');
+      const newCard = document.createElement('div');
+      newCard.className = 'nb-card fleet-card fade-in';
+      newCard.innerHTML = `
+        <div>
+          <div class="fleet-card-header">
+            <span class="fleet-card-plate">${plate.toUpperCase()}</span>
+            <span class="nb-badge yellow">IN SERVICE</span>
+          </div>
+          <strong style="display:block; margin-bottom:8px;">${vClass.toUpperCase()}</strong>
+          <p style="font-size:0.9rem; margin-bottom:4px;"><strong>Driver:</strong> ${driver}</p>
+          <p style="font-size:0.9rem; margin-bottom:12px;"><strong>Assigned Zone:</strong> ${hub}</p>
+        </div>
+        <div>
+          <span style="font-size:0.75rem; font-family:var(--font-mono); font-weight:700; display:block; margin-bottom:4px;">FUEL / ACCUMULATOR</span>
+          <div class="driver-progress-bar-outer" style="height:14px; margin-bottom:8px;">
+            <div class="driver-progress-bar-inner excellent" style="width: ${telemetry}%;"></div>
+          </div>
+          <span style="font-size:0.75rem; font-family:var(--font-mono);">${telemetry}% TELEMETRY OK</span>
+        </div>
+      `;
+      container.prepend(newCard);
+      closeModal('vehicle-modal');
+      event.target.reset();
+
+      // Show alert
+      alert(`[RouteX Logistics Systems]\n\nVehicle ${plate.toUpperCase()} registered and dispatched to Hub ${hub}.`);
+    }
+
+    // 4. Dynamic Lists: Driver Additions
+    function submitNewDriver(event) {
+      event.preventDefault();
+      const name = document.getElementById('m-d-name').value;
+      const hub = document.getElementById('m-d-hub').value;
+      const safety = document.getElementById('m-d-safety').value;
+      const id = `#DRV-${Math.floor(100 + Math.random() * 900)}`;
+
+      const tableBody = document.getElementById('drivers-table-body');
+      const newRow = document.createElement('tr');
+      newRow.className = 'fade-in';
+      newRow.innerHTML = `
+        <td class="font-mono-cell">${id}</td>
+        <td><strong>${name}</strong></td>
+        <td>${hub}</td>
+        <td><span class="nb-badge ${safety >= 80 ? 'green' : 'yellow'}">${safety}/100</span></td>
+        <td><span class="nb-badge green" id="badge-drv-${id.substring(1)}">ACTIVE</span></td>
+        <td><button class="nb-btn yellow" style="padding:4px 8px; font-size:0.75rem;" onclick="suspendDriver('${id}', this)">SUSPEND</button></td>
+      `;
+      tableBody.prepend(newRow);
+      closeModal('driver-modal');
+      event.target.reset();
+      
+      alert(`[RouteX Logistics Systems]\n\nDriver ${name} has been certified and added to registry.`);
+    }
+
+    // 5. Dynamic Lists: Suspend Driver Action
+    function suspendDriver(id, button) {
+      const badgeId = 'badge-drv-' + id.substring(5); // removes #DRV-
+      const badge = document.getElementById(badgeId);
+      
+      if (badge) {
+        if (badge.textContent === 'ACTIVE' || badge.textContent === 'STANDBY') {
+          badge.textContent = 'SUSPENDED';
+          badge.className = 'nb-badge orange';
+          badge.style.color = 'white';
+          button.textContent = 'REINSTATE';
+          alert(`[RouteX Safety Audit]\n\nDriver ${id} has been suspended from active dispatch queues.`);
+        } else {
+          badge.textContent = 'ACTIVE';
+          badge.className = 'nb-badge green';
+          badge.style.color = '';
+          button.textContent = 'SUSPEND';
+          alert(`[RouteX Safety Audit]\n\nDriver ${id} reinstated to active dispatch eligibility.`);
+        }
+      }
+    }
+
+    // 6. Dynamic Waybill Dispatch Bookings
+    function bookParcel(event) {
+      event.preventDefault();
+      const client = document.getElementById('book-client').value;
+      const route = document.getElementById('book-route').value;
+      const weight = document.getElementById('book-weight').value;
+      const priority = document.getElementById('book-priority').value;
+      const waybill = `#RTX-PKG-${Math.floor(100 + Math.random() * 900)}`;
+
+      const tableBody = document.getElementById('packages-table-body');
+      const newRow = document.createElement('tr');
+      newRow.className = 'fade-in';
+      newRow.innerHTML = `
+        <td class="font-mono-cell">${waybill}</td>
+        <td>${client}</td>
+        <td>${route}</td>
+        <td>${weight} KG</td>
+        <td><span class="nb-badge ${priority === 'URGENT' ? 'orange' : priority === 'EXPRESS' ? 'yellow' : 'gray'}" ${priority === 'URGENT' ? 'style="color:white;"' : ''}>${priority}</span></td>
+        <td><span class="nb-badge yellow">QUEUED</span></td>
+      `;
+      tableBody.prepend(newRow);
+
+      // Prepend to main dashboard live queue table too
+      const mainTableBody = document.getElementById('orders-table-body');
+      if (mainTableBody) {
+        const simpleRow = document.createElement('tr');
+        simpleRow.className = 'fade-in';
+        simpleRow.innerHTML = `
+          <td class="font-mono-cell" style="background:#FFFCE0;">${waybill}</td>
+          <td>${client}</td>
+          <td>${route}</td>
+          <td><span class="nb-badge yellow">IN TRANSIT</span></td>
+          <td>AI Dispatch</td>
+        `;
+        mainTableBody.prepend(simpleRow);
+      }
+
+      // Update KPI Counter
+      const deliveriesKpi = document.getElementById('kpi-deliveries');
+      if (deliveriesKpi) {
+        const val = parseInt(deliveriesKpi.textContent.replace(/,/g, '')) + 1;
+        deliveriesKpi.textContent = val.toLocaleString();
+      }
+
+      event.target.reset();
+      alert(`[RouteX Waybill Dispatch]\n\nOrder booked successfully under tracking code ${waybill}.\nAI Routing assigned automatically.`);
+    }
+
+    // 7. Dynamic fiscal report compiler loader
+    function generateMockPDF() {
+      const container = document.getElementById('pdf-progress-container');
+      const bar = document.getElementById('pdf-progress-bar');
+      const label = document.getElementById('pdf-percent-text');
+      if (!container || !bar || !label) return;
+
+      container.style.display = 'block';
+      let progress = 0;
+      bar.style.width = '0%';
+      label.textContent = 'COMPILING 0%';
+
+      const interval = setInterval(() => {
+        progress += 10;
+        bar.style.width = progress + '%';
+        label.textContent = `COMPILING ${progress}% - COLLECTING TELEMETRY STREAMS`;
+
+        if (progress >= 100) {
+          clearInterval(interval);
+          label.textContent = 'DOWNLOAD COMPLETED: ROUTEX_Q2_COMPLIANCE.PDF';
+          alert('[RouteX Reports Center]\n\nExport Completed. Q2 logistics fuel and dispatch report downloaded to local device (Simulated).');
+          setTimeout(() => {
+            container.style.display = 'none';
+          }, 4000);
+        }
+      }, 250);
+    }
+
+    // 8. Integrates URL query logic (Customer / Provider parameters)
+    document.addEventListener("DOMContentLoaded", function() {
+      initLeafletMap();
+      const params = new URLSearchParams(window.location.search);
+      const role = params.get('role');
+      const email = params.get('email') || params.get('providerId');
+
+      if (role === 'customer') {
+        activeRole = 'customer';
+        
+        // Customize sidebar: Hide Platform Admin, Provider links, Fleet, Drivers, Audits, Database
+        const adminItem = document.querySelector('.sidebar-nav [data-nav="admin"]');
+        const providerItem = document.querySelector('.sidebar-nav [data-nav="provider"]');
+        const fleetItem = document.querySelector('.sidebar-nav [data-nav="fleet"]');
+        const driverItem = document.querySelector('.sidebar-nav [data-nav="drivers"]');
+        const reportsItem = document.querySelector('.sidebar-nav [data-nav="reports"]');
+        const databaseItem = document.querySelector('.sidebar-nav [data-nav="database"]');
+        
+        if (adminItem) adminItem.style.display = 'none';
+        if (providerItem) providerItem.style.display = 'none';
+        if (fleetItem) fleetItem.style.display = 'none';
+        if (driverItem) driverItem.style.display = 'none';
+        if (reportsItem) reportsItem.style.display = 'none';
+        if (databaseItem) databaseItem.style.display = 'none';
+
+        // Update profile header
+        const nameLabel = document.querySelector('.user-name');
+        const avatarBox = document.querySelector('.user-avatar');
+        if (nameLabel) nameLabel.textContent = email ? email.split('@')[0].toUpperCase() + ' (CLIENT)' : 'CUSTOMER LOGGED';
+        if (avatarBox) avatarBox.textContent = email ? email.substring(0, 1).toUpperCase() : 'C';
+
+        // Set Title badge
+        const currentTitle = document.getElementById('current-section-title');
+        if (currentTitle) currentTitle.textContent = 'CUSTOMER SHIPPING BOARD';
+
+        // Customize KPIs for a customer context
+        const deliveriesVal = document.getElementById('kpi-deliveries');
+        const revenueVal = document.getElementById('kpi-revenue');
+        const fuelVal = document.getElementById('kpi-fuel');
+        if (deliveriesVal) deliveriesVal.textContent = '24 Shipments';
+        if (revenueVal) revenueVal.textContent = '₹4,20,000 Spend';
+        if (fuelVal) fuelVal.textContent = '99.8% On-Time';
+        const fuelKpiLabel = document.querySelector('.kpi-card:nth-child(3) .kpi-label');
+        if (fuelKpiLabel) fuelKpiLabel.textContent = 'DELIVERY SCORE';
+
+        // Auto switch nav to booking tool (Packages)
+        switchNavDirect('packages');
+
+        // Prepopulate booking tool client name
+        const clientSelect = document.getElementById('book-client');
+        if (clientSelect && email) {
+          clientSelect.innerHTML = `<option value="${email}">${email}</option>`;
+        }
+      } 
+      else if (role === 'provider') {
+        activeRole = 'provider';
+        
+        // Hide Customer Portal, Platform Admin
+        const customerItem = document.querySelector('.sidebar-nav [data-nav="customer"]');
+        const adminItem = document.querySelector('.sidebar-nav [data-nav="admin"]');
+        if (customerItem) customerItem.style.display = 'none';
+        if (adminItem) adminItem.style.display = 'none';
+
+        // Update profile header
+        const nameLabel = document.querySelector('.user-name');
+        const avatarBox = document.querySelector('.user-avatar');
+        if (nameLabel) nameLabel.textContent = email ? 'FLEET OPERATOR (' + email.toUpperCase() + ')' : 'PROVIDER LOGGED';
+        if (avatarBox) avatarBox.textContent = 'P';
+
+        // Set Title badge
+        const currentTitle = document.getElementById('current-section-title');
+        if (currentTitle) currentTitle.textContent = 'PROVIDER OPERATIONS';
+
+        // Redirect default nav view
+        switchNavDirect('fleet');
+      }
+
+      // Initialize default selectors
+      selectRadarVehicle('MH-12-Q-4029');
+    });
+
+    // Chart.js Setup for Neo-Brutalist Layout
+    let financialChart;
+    document.addEventListener("DOMContentLoaded", function() {
+      const ctx = document.getElementById('financialChart').getContext('2d');
+      if (!ctx) return;
+
+      const isDarkInit = document.documentElement.getAttribute('data-theme') === 'dark';
+      const tickColor = isDarkInit ? '#e0e0e0' : '#000000';
+      const gridColor = isDarkInit ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.15)';
+      const legendColor = isDarkInit ? '#e0e0e0' : '#000000';
+      const netProfitLineColor = isDarkInit ? '#ffffff' : '#000000';
+
+      financialChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN'],
+          datasets: [
+            {
+              label: 'REVENUE',
+              data: [28.5, 34.2, 38.0, 42.1, 45.8, 48.2],
+              borderColor: '#FFED47', // Primary Yellow
+              backgroundColor: 'rgba(255, 237, 71, 0.1)',
+              borderWidth: 4,
+              pointBackgroundColor: '#000000',
+              pointBorderColor: '#FFED47',
+              pointBorderWidth: 2,
+              pointRadius: 6,
+              pointHoverRadius: 8,
+              tension: 0,
+            },
+            {
+              label: 'FUEL COSTS',
+              data: [5.2, 5.8, 6.1, 6.4, 6.7, 6.84],
+              borderColor: '#FF4D00', // Orange
+              backgroundColor: 'rgba(255, 77, 0, 0.1)',
+              borderWidth: 4,
+              pointBackgroundColor: '#000000',
+              pointBorderColor: '#FF4D00',
+              pointBorderWidth: 2,
+              pointRadius: 6,
+              pointHoverRadius: 8,
+              tension: 0,
+            },
+            {
+              label: 'NET PROFIT',
+              data: [23.3, 28.4, 31.9, 35.7, 39.1, 41.36],
+              borderColor: netProfitLineColor,
+              backgroundColor: 'rgba(0, 0, 0, 0.05)',
+              borderWidth: 4,
+              pointBackgroundColor: '#00FF94', // Accent Green
+              pointBorderColor: netProfitLineColor,
+              pointBorderWidth: 2,
+              pointRadius: 6,
+              pointHoverRadius: 8,
+              tension: 0,
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              display: true,
+              labels: {
+                font: {
+                  family: 'IBM Plex Mono',
+                  weight: 'bold',
+                  size: 11
+                },
+                color: legendColor,
+                boxWidth: 15,
+                boxHeight: 15,
+                padding: 15,
+                usePointStyle: false,
+              }
+            },
+            tooltip: {
+              backgroundColor: '#000000',
+              titleFont: { family: 'IBM Plex Mono', weight: 'bold' },
+              bodyFont: { family: 'Syne' },
+              borderWidth: 2,
+              borderColor: '#FFED47',
+              displayColors: true,
+              callbacks: {
+                label: function(context) {
+                  return ` ${context.dataset.label}: ₹${context.raw} LAKHS`;
+                }
+              }
+            }
+          },
+          scales: {
+            x: {
+              grid: {
+                color: gridColor,
+                lineWidth: 1
+              },
+              ticks: {
+                font: {
+                  family: 'IBM Plex Mono',
+                  weight: 'bold'
+                },
+                color: tickColor
+              },
+              border: {
+                width: 3,
+                color: tickColor
+              }
+            },
+            y: {
+              grid: {
+                color: gridColor,
+                lineWidth: 1
+              },
+              ticks: {
+                font: {
+                  family: 'IBM Plex Mono',
+                  weight: 'bold'
+                },
+                color: tickColor,
+                callback: function(value) {
+                  return '₹' + value + ' L';
+                }
+              },
+              border: {
+                width: 3,
+                color: tickColor
+              }
+            }
+          }
+        }
+      });
+    });
+  </script>
+
+  <!-- Theme Toggle Script -->
+  <script src="theme-toggle.js"></script>
+</body>
+</html>
